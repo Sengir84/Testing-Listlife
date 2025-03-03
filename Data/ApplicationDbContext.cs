@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using ListLife.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ListLife.Data
@@ -8,6 +9,11 @@ namespace ListLife.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
+
+        // Skapa tabell ShoppingLists i Databasen DbSet
+        public DbSet<ShoppingList> ShoppingLists { get; set; }
+
     }
 }
