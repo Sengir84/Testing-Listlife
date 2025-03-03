@@ -17,5 +17,7 @@ namespace ListLife.Data
 
         // Skapa tabell för Categories i Databasen DbSet
         public DbSet<Category> Categories { get; set; }
+
+
     }
 }

@@ -2,7 +2,8 @@
 
 namespace ListLife.Models
 {
-    public class Category
+    // kategori-modell som representerar en kategori i databasen
+    public class Category 
     {
         public int Id { get; set; }
 

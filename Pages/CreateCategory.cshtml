@@ -1,0 +1,68 @@
+﻿@page
+@model ListLife.Pages.CreateCategoryModel
+@{
+}
+
+<h1 class="Header">Welcome to your ShoppingLists</h1>
+
+
+<form>
+    <div>
+        <label>Product:</label>
+        <input type="text" id="category" name="category">
+    </div>
+
+    <div>
+        <label>Amount</label>
+        <select id="amount" name="amount">
+            @for (int i = 1; i <= 15; i++)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="FruitsVegetables">Fruits & Vegetables</option>
+            <option value="Fridge ">Fridge items</option>
+            <option value="Freezer">Freezer items</option>
+            <option value="Pantry">Pantry items</option>
+            <option value="Hygiene">Hygiene items</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <button type="submit" class="AddToShoppingList">Add to ShoppingList</button>
+
+</form>
+
+<div>
+    <button type="button" class="newShoppingList" onclick="location.href='/UserShoppingLists'">Create new Shopping List</button>
+</div>
+<div>
+    <button type="button" class="yourShoppingLists" onclick="location.href='/YourShoppingLists'">Create new Shopping List</button>
+</div>
+
+
+<style>
+
+    .Header {
+        margin-bottom: 20px;
+    }
+
+    .AddToShoppingList {
+        background-color: mediumpurple;
+        border-radius: 8px;
+        margin: 15px;
+    }
+    .newShoppingList {
+        background-color: mediumpurple;
+        border-radius: 8px;
+        margin: 15px;
+        margin-top: 20px;
+    }
+
+
+</style>
