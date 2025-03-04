@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace ListLife.Models
 {
@@ -6,8 +7,12 @@ namespace ListLife.Models
     {
         //Name of the list
         public string ListName { get; set; }
+
         //FK to user
-        public int ShoppingId  { get; set; }
-        public ShoppingList ShoppingList { get; set; }
+
+        public int ShoppingId { get; set; }
+        public List<ShoppingList> ShoppingLists { get; set; }
+
+
     }
 }
