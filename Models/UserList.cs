@@ -11,8 +11,7 @@ namespace ListLife.Models
         //FK to user
 
         public int ShoppingId { get; set; }
-        public List<ShoppingList> ShoppingLists { get; set; }
-
+        public List<ShoppingList> ShoppingLists { get; set; } = new();
 
     }
 }

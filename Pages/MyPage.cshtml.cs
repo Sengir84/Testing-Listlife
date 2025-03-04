@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ListLife.Pages
 {
-    [Authorize]
+    //[Authorize]
     public class MyPageModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -24,6 +24,10 @@ namespace ListLife.Pages
 
         //Hold the user's lists
         public IList<UserList> UserList { get; set; }
+
+        // La till ShoppingList / Nän 
+        // List to hold shopping lists for the logged-in user
+        public IList<ShoppingList> ShoppingLists { get; set; }
 
         public async Task OnGetAsync()
         {
