@@ -1,21 +1,24 @@
-﻿@page 
+﻿@page
 @model IndexModel
+
 @{
     ViewData["Title"] = "Home";
 }
 
 <header class="container text-center d-flex flex-column align-items-center justify-content-center" style="height: 40vh;">
     <h1 class="welcome-title">Welcome to ListLife</h1>
-    <p class="welcome-text">Lists makes your life easier</p>
+    <p class="welcome-text">Lists make your life easier</p>
 </header>
 
 <main class="container text-center d-flex flex-column align-items-center">
     <nav>
-        <a asp-page="/Account/Login" class="btn custom-btn">
+       
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn custom-btn">
             <i class="bi bi-box-arrow-in-right"></i> Login
         </a>
-        <a asp-page="/Account/Register" class="btn custom-btn">
-            <i class="bi bi-person-plus"></i> Sign in
+        
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn custom-btn">
+            <i class="bi bi-person-plus"></i> Register
         </a>
     </nav>
 </main>
@@ -23,4 +26,3 @@
 <footer class="text-center mt-4">
     <p class="small">&copy; 2025 ListLife. All rights reserved.</p>
 </footer>
-
