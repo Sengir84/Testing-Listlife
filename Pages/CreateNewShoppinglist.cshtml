@@ -1,0 +1,29 @@
+﻿@page
+@model ListLife.Pages.CreateNewShoppingList
+@{
+}
+
+<h2>Create New Shoppinglist</h2>
+
+<div class="form-group">
+    <label for="ShoppingListName">Shopping List Name:</label>
+    <input type="text" id="ShoppingListName" class="form-control" placeholder="Enter list name" />
+</div>
+
+<button class="btnCreateList">Create Shopping List</button>
+<button class="btnCancel" onclick="window.location.href='/MyPage'">Cancel</button>
+
+
+<style>
+    .btnCreateList {
+        background-color: mediumpurple;
+        border-radius: 8px;
+        margin: 15px;
+    }
+
+    .btnCancel {
+        background-color: mediumpurple;
+        border-radius: 8px;
+        margin: 15px;
+    }
+</style>

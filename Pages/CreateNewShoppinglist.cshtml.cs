@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ListLife.Pages
 {
-    public class Index1Model : PageModel
+    public class CreateNewShoppingList : PageModel
     {
         public void OnGet()
         {

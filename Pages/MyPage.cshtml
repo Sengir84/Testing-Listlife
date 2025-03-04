@@ -1,5 +1,5 @@
 ﻿@page
-@model ListLife.Pages.CreateCategoryModel
+@model ListLife.Pages.MyPage
 @{
 }
 
@@ -34,15 +34,15 @@
         </select>
     </div>
 
-    <button type="submit" class="AddToShoppingList">Add to ShoppingList</button>
+    <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
 
 </form>
 
 <div>
-    <button type="button" class="newShoppingList" onclick="location.href='/UserShoppingLists'">Create new Shopping List</button>
+    <button type="button" class="btnNewShoppingList" onclick="location.href='/CreateNewShoppinglist'">Create new Shopping List</button>
 </div>
 <div>
-    <button type="button" class="yourShoppingLists" onclick="location.href='/YourShoppingLists'">Create new Shopping List</button>
+    <button type="button" class="btnYourShoppingLists" onclick="location.href='/YourShoppingLists'">Your Shopping List</button>
 </div>
 
 
@@ -52,12 +52,20 @@
         margin-bottom: 20px;
     }
 
-    .AddToShoppingList {
+    .btnAddToShoppingList {
         background-color: mediumpurple;
         border-radius: 8px;
         margin: 15px;
     }
-    .newShoppingList {
+
+    .btnNewShoppingList {
+        background-color: mediumpurple;
+        border-radius: 8px;
+        margin: 15px;
+        margin-top: 20px;
+    }
+
+    .btnYourShoppingLists {
         background-color: mediumpurple;
         border-radius: 8px;
         margin: 15px;
