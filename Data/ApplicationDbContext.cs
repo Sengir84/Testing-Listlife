@@ -11,8 +11,15 @@ namespace ListLife.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            
+
         }
-        public DbSet<ShoppingList> ShoppingList { get; set; }
+
+        // Skapa tabell ShoppingLists i Databasen DbSet
+        public DbSet<ShoppingList> ShoppingLists { get; set; }
+
+        // Skapa tabell för Categories i Databasen DbSet
+        public DbSet<Category> Categories { get; set; }
+
+
     }
 }
