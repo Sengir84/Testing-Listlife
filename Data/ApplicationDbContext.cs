@@ -6,7 +6,7 @@ using Microsoft.Identity.Client;
 
 namespace ListLife.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<UserList>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -20,6 +20,16 @@ namespace ListLife.Data
         // Skapa tabell för Categories i Databasen DbSet
         public DbSet<Category> Categories { get; set; }
 
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+
+        //    modelBuilder.Entity<UserList>()
+        //        .HasMany(u => u.ShoppingLists)
+        //        .WithOne(s => s.UserList)
+        //        .HasForeignKey(s => s.UserId);
+        //}
 
     }
 }
