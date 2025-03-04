@@ -14,9 +14,9 @@ namespace ListLife.Pages
     public class MyPageModel : PageModel
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<UserList> _userManager;
 
-        public MyPageModel(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public MyPageModel(ApplicationDbContext context, UserManager<UserList> userManager)
         {
             _context = context;
             _userManager = userManager;

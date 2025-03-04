@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using ListLife.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,17 +24,17 @@ namespace ListLife.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<UserList> _signInManager;
+        private readonly UserManager<UserList> _userManager;
+        private readonly IUserStore<UserList> _userStore;
+        private readonly IUserEmailStore<UserList> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<UserList> userManager,
+            IUserStore<UserList> userStore,
+            SignInManager<UserList> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -155,11 +156,11 @@ namespace ListLife.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private UserList CreateUser()
         {
             try
             {
-                return new IdentityUser
+                return new UserList
                 {
                     
                     Email = Input.Email
@@ -167,33 +168,33 @@ namespace ListLife.Areas.Identity.Pages.Account
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(UserList)}'. " +
+                    $"Ensure that '{nameof(UserList)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
 
-        //private IdentityUser CreateUser()
+        //private UserList CreateUser()
         //{
         //    try
         //    {
-        //        return Activator.CreateInstance<IdentityUser>();
+        //        return Activator.CreateInstance<UserList>();
         //    }
         //    catch
         //    {
-        //        throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-        //            $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+        //        throw new InvalidOperationException($"Can't create an instance of '{nameof(UserList)}'. " +
+        //            $"Ensure that '{nameof(UserList)}' is not an abstract class and has a parameterless constructor, or alternatively " +
         //            $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
         //    }
         //}
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<UserList> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<UserList>)_userStore;
         }
     }
 }
