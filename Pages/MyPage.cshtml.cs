@@ -30,8 +30,7 @@ namespace ListLife.Pages
             //Get user
             var user = await _userManager.GetUserAsync(User);
 
-            //Get user's lists from database
-            UserList = _context.UserLists.Where(x => x.UserId == user.Id).ToList();
+           
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
@@ -47,11 +46,11 @@ namespace ListLife.Pages
             var newList = new UserList
             {
                 ListName = Request.Form["ListName"],
-                UserId = userId
+                Id = userId
             };
 
             //Add list to database
-            _context.UserLists.Add(newList);
+            _context.Users.Add(newList);
             await _context.SaveChangesAsync();
 
 
