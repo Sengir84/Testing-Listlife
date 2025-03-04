@@ -1,0 +1,99 @@
+﻿@page
+<<<<<<< HEAD
+@model ListLife.Pages.MyPage
+@{
+}
+
+<h1 class="Header">Welcome to your ShoppingLists</h1>
+
+<section class="container">
+
+
+    <div class="leftSide">
+            <div>
+                <label>Product:</label>
+                <input type="text" id="category" name="category">
+            </div>
+
+            <div>
+                <label>Amount</label>
+                <select id="amount" name="amount">
+                    @for (int i = 1; i <= 15; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="FruitsVegetables">Fruits & Vegetables</option>
+                    <option value="Fridge ">Fridge items</option>
+                    <option value="Freezer">Freezer items</option>
+                    <option value="Pantry">Pantry items</option>
+                    <option value="Hygiene">Hygiene items</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
+                <div>
+                    <button type="button" class="btnNewShoppingList" onclick="location.href='/CreateNewShoppinglist'">Create new Shopping List</button>
+                </div>
+
+
+    </div>
+
+
+    <div class="rightSide">
+        <h2>Your Shoppinglists:</h2>
+            <div>
+                
+               
+            </div>
+
+    </div>
+</section>
+
+
+
+
+<style>
+
+    .Header {
+        margin-bottom: 20px;
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .leftSide {
+        width: 60%;
+    }
+
+    .rightSide {
+        width: 35%;
+        background-color: #f5f5f5;
+        border-radius: 10px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btnAddToShoppingList,
+    .btnNewShoppingList,
+    .btnYourShoppingLists {
+        background-color: mediumpurple;
+        border-radius: 8px;
+        margin: 15px;
+    }
+
+</style>
+=======
+@model ListLife.Pages.MyPageModel
+@{
+}
+
+<h1>MY PAGE!!</h1>
+>>>>>>> dceee18128bde102aacc88079bac69f19d27755b
