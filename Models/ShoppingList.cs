@@ -4,12 +4,16 @@
     {
         public int Id { get; set; }
         public string Product { get; set; }
-        public string Category { get; set; } 
         public string Amount { get; set; }
 
         // ConnectionTable
-        public string UserListId { get; set; }
-        //public UserList UserList { get; set; }
+        public string UserId { get; set; }
+        public UserList UserList { get; set; }
+        
+
+        // FK till Category
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
 
     }
 }

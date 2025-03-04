@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace ListLife.Pages
-{
-    //[Authorize]
-    public class MyPage : PageModel
-    {
-        public void OnGet()
-        {
-        }
-=======
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
@@ -44,7 +30,7 @@ namespace ListLife.Pages
             //Get user
             var user = await _userManager.GetUserAsync(User);
 
-           
+
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
@@ -71,7 +57,5 @@ namespace ListLife.Pages
             return RedirectToPage();
         }
 
-      
->>>>>>> dceee18128bde102aacc88079bac69f19d27755b
     }
 }
