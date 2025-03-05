@@ -39,9 +39,10 @@ namespace ListLife.Pages
                     .Where(shoppingList => shoppingList.UserId == user.Id)  // Filtrera baserat på användarens ID
                     .ToList();
 
-                context.Add(ShoppingLists);
+                context.Add(ShoppingLists); // FEL? 
                 await context.SaveChangesAsync();                
             }
+
             return RedirectToPage("/MyPage");
         }
     }
