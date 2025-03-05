@@ -5,20 +5,15 @@
 
 <h2>Create New Shoppinglist</h2>
 
-<form method="post">
+<form asp-page="/MyPage" method="post">
     <div class="newList">
         <label for="ShoppingListName">Shopping List Name:</label>
-        <input type="text" id="ShoppingListN" class="form-control" placeholder="Enter list name" />
+        <input type="text" id="ShoppingListName" class="form-control" placeholder="Enter list name" />
     </div>
 
-    <button type="submit" class="btn btn-primary" onclick="window.location.href='/MyPage'">Create Shopping List</button>
-    <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
+    <button type="submit" class="btn btn-primary">Create Shopping List</button>
+
 </form>
-
-<style>
-
-
-</style>
+<button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
 
 
-@* lade till @page "/CreateNewShoppinglist" efter @Page *@

@@ -27,6 +27,12 @@ namespace ListLife.Pages
             this.userManager = userManager;
         }
 
+
+        public void OnGet()
+        {
+
+        }
+
         //public async Task<IActionResult> OnGetAsync()
         //{
         //    // Hämta den inloggade användaren asynkront
@@ -48,10 +54,5 @@ namespace ListLife.Pages
 
         //    //return RedirectToPage("/MyPage");
         //}
-
-        public void OnGet()
-        {
-
-        }
     }
 }
