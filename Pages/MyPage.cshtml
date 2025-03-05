@@ -1,4 +1,4 @@
-﻿@page
+﻿@page 
 @model ListLife.Pages.MyPageModel
 @{
 }
@@ -28,8 +28,9 @@
             </div>
 
             <div>
-                <label for="category">Category:</label>
-                <select id="category" name="category">
+                <label>Category:</label>
+            <select>
+                <option value="">--Select Category--</option>
                     <option value="FruitsVegetables">Fruits & Vegetables</option>
                     <option value="Fridge ">Fridge items</option>
                     <option value="Freezer">Freezer items</option>
@@ -41,7 +42,9 @@
 
             <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
                 <div>
-                    <button type="button" class="btnNewShoppingList" onclick="location.href='/CreateNewShoppinglist'">Create new Shopping List</button>
+            <form asp-page="/CreateNewShoppingList" method="get">
+                <button type="submit" class="btnNewShoppingList">Create new Shopping List</button>
+            </form>
                 </div>
 
 
@@ -51,20 +54,24 @@
     <div class="right-Section">
         <h2>Your Shoppinglists:</h2>
             <div>
-            @foreach (var list in Model.ShoppingLists)
-            {
-                <div>
-                    <p>@list.Product</p>
-                    <p>@list.Category</p>
-                    <p>@list.Amount</p>
-                </div>
-            }              
-            </div>
+
+                @if(Model.ShoppingLists!= null)
+                {
+                    foreach (var list in Model.ShoppingLists)
+                    {
+                        <div>
+                            <p>@list.Product</p>
+                            <p>@list.Category</p>
+                            <p>@list.Amount</p>
+                        </div>
+                    }   
+                }
+            
             else 
             {
                 <p>No Shoppinglist(s) found.</p>
             }
-
+        </div>
     </div>
 </section>
 

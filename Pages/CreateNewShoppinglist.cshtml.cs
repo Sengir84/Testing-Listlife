@@ -3,6 +3,7 @@ using ListLife.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,39 +12,57 @@ namespace ListLife.Pages
     public class CreateNewShoppingList : PageModel
     {
         // instans av databasen för att lagra listor
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext Dbcontext;
 
         // Hanterar användare via ASP.NET Identity (UserManager) för att hämta och hantera inloggade användare
-        private readonly UserManager<IdentityUser> userManager;
-
-
-        // Property för att hålla användarens shoppinglistor
-        public IList<ShoppingList> ShoppingLists { get; set; }
+        private readonly UserManager<UserList> userManager;
 
         // Konstruktor
-        public CreateNewShoppingList(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public CreateNewShoppingList(ApplicationDbContext context, UserManager<UserList> userManager)
         {
-            this.context = context;
+            this.Dbcontext = context;
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        [BindProperty]
+        // Property för att hålla användarens shoppinglistor
+        public ShoppingList ShoppingList { get; set; }
+
+        public string UserListName { get; set; }
+
+
+        //public void OnGet()
+        //{
+        //}
+
+        public async Task OnGetAsync()
         {
-            // Hämta den inloggade användaren asynkront
-            var user = await userManager.GetUserAsync(User); // User är en inbyggd property i PageModel som innehåller information om den inloggade användaren
+            var user = await userManager.GetUserAsync(User); // Hämta den inloggade användaren
+            if (user != null)
+            {
+                UserListName = user.ListName; 
+            }
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var user = await userManager.GetUserAsync(User);
 
             if (user != null)
             {
-                // Hämta alla shoppinglistor för den inloggade användaren
-                ShoppingLists = context.ShoppingLists
-                    .Where(shoppingList => shoppingList.UserId == user.Id)  // Filtrera baserat på användarens ID
-                    .ToList();
+                // Koppla shoppinglistan till användaren och sätt användarens ID
+                ShoppingList.UserId = user.Id;
+                ShoppingList.UserList = user;
 
-                context.Add(ShoppingLists); // FEL? 
-                await context.SaveChangesAsync();                
+                // Hur kommer jag åt ListName från UserList?
+                // ShoppingList.ListName = user.ListName;
+
+                // Lägg till shoppinglistan i databasen
+                Dbcontext.ShoppingLists.Add(ShoppingList);
+                await Dbcontext.SaveChangesAsync();  // Spara ändringarna i databasen
             }
 
-            return RedirectToPage("/MyPage");
+            return RedirectToPage("/MyPage");  // Omdirigera till annan sida efter att ha sparat listan
         }
     }
 }

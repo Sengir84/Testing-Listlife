@@ -36,7 +36,7 @@ namespace ListLife.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
@@ -71,7 +71,7 @@ namespace ListLife.Migrations
 
                     b.HasIndex("UserListId");
 
-                    b.ToTable("ShoppingLists");
+                    b.ToTable("ShoppingLists", (string)null);
                 });
 
             modelBuilder.Entity("ListLife.Models.UserList", b =>
