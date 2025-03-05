@@ -1,22 +1,68 @@
+/* google fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
+/* responsiv fontstorlek ändras efter skärmstorlek*/
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
+
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+
+/* html elementen sätts till 100% av skärmhöjden så sidan fyller hela fönstret*/
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
+
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #2c2c2c; 
+    color: #ffffff; 
+    font-family: 'Poppins', sans-serif;
 }
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+}
+
+/*knappdesign*/
+.custom-btn {
+    background-color: #d48cff;
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+    margin: 5px;
+}
+
+/* knappen får en mörkare färg när man står över den med musen*/
+    .custom-btn:hover {
+        background-color: #bf73e6;
+    }
+
+
+    /* om det blir aktuellt med ikon på en knapp så får den distans till texten*/
+    /*.custom-btn i {
+        margin-right: 8px;
+    }*/

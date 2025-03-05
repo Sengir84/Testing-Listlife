@@ -3,6 +3,74 @@
 @{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container privacy-container">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: 2025-02-04</p>
+
+    <h2>1. Introduction</h2>
+    <p>Welcome to <strong>ListLife</strong>. Your privacy is important to us, and we are committed to protecting your personal data.</p>
+
+    <h3>2. Information We Collect</h3>
+    <ul>
+        <li>Personal Information: Name, email, account details.</li>
+        <li>Usage Data: Website activity, pages visited, session time.</li>
+        <li>Cookies: We use cookies to improve functionality and user experience.</li>
+    </ul>
+
+    <h4>3. How We Use Your Information</h4>
+    <p>We use your data to provide and improve our services, personalize your experience, and ensure security.</p>
+
+    <h5>4. Contact Us</h5>
+    <p class="contact">📧 Email: <a href="mailto:List@life.com">List@Life.com</a></p>
+
+</div>
+
+<style>
+   
+    .privacy-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #333; 
+        color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+        .privacy-container h1,
+        .privacy-container h2,
+        .privacy-container h3,
+        .privacy-container h4,
+        .privacy-container h5 {
+            color: #d48cff; 
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .privacy-container p {
+            font-size: 0.5rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .privacy-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+            .privacy-container ul li {
+                position: relative;
+                margin-bottom: 10px;
+            }
+
+            .privacy-container a:hover {
+                text-decoration: underline;
+            }
+
+        .privacy-container .contact {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+</style>
