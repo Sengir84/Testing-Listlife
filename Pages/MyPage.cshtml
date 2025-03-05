@@ -7,9 +7,12 @@
 
 <section class="container">
 
-
-    <div class="leftSide">
+    
+    <div class="left-Section">
+    <h2>Add new Product:</h2>
             <div>
+            
+
                 <label>Product:</label>
                 <input type="text" id="category" name="category">
             </div>
@@ -45,12 +48,22 @@
     </div>
 
 
-    <div class="rightSide">
+    <div class="right-Section">
         <h2>Your Shoppinglists:</h2>
             <div>
-                
-               
+            @foreach (var list in Model.ShoppingLists)
+            {
+                <div>
+                    <p>@list.Product</p>
+                    <p>@list.Category</p>
+                    <p>@list.Amount</p>
+                </div>
+            }              
             </div>
+            else 
+            {
+                <p>No Shoppinglist(s) found.</p>
+            }
 
     </div>
 </section>
@@ -64,15 +77,15 @@
     }
 
     .container {
-        display: flex;
+        display: flex;    
         justify-content: space-between;
     }
 
-    .leftSide {
+    .left-Section {
         width: 60%;
     }
 
-    .rightSide {
+    .right-Section {
         width: 35%;
         background-color: #f5f5f5;
         border-radius: 10px;

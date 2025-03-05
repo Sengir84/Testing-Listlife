@@ -4,6 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
+using ListLife.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,13 +14,13 @@ namespace ListLife.Areas.Identity.Pages.Account.Manage
 {
     public class ResetAuthenticatorModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<UserList> _userManager;
+        private readonly SignInManager<UserList> _signInManager;
         private readonly ILogger<ResetAuthenticatorModel> _logger;
 
         public ResetAuthenticatorModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<UserList> userManager,
+            SignInManager<UserList> signInManager,
             ILogger<ResetAuthenticatorModel> logger)
         {
             _userManager = userManager;
