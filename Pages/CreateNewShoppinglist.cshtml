@@ -5,10 +5,35 @@
 
 <h2>Create New Shoppinglist</h2>
 
-<form asp-page="/MyPage" method="post">
-    <div class="newList">
-        <label for="ShoppingListName">Shopping List Name:</label>
-        <input type="text" id="ShoppingListName" class="form-control" placeholder="Enter list name" />
+<form method="post">
+    <div>
+        <label asp-for="ShoppingList.UserList">Shoppinglist Name:</label>
+        <input asp-for="ShoppingList.UserList" class="form-control" placeholder="Enter Listname" />
+    </div>
+
+    <div>
+        <label>Category:</label>
+        <select class="form-control">
+            <option value="">--Select Category--</option>
+            <label for="category">Category:</label>
+                <option value="FruitsVegetables">Fruits & Vegetables</option>
+                <option value="Fridge ">Fridge items</option>
+                <option value="Freezer">Freezer items</option>
+                <option value="Pantry">Pantry items</option>
+                <option value="Hygiene">Hygiene items</option>
+                <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div>
+        <label asp-for="ShoppingList.Product">Product Name:</label>
+        <input asp-for="ShoppingList.Product" class="form-control" placeholder="Enter product name" />
+    </div>
+
+    <div>
+        <label asp-for="ShoppingList.Amount">Amount:</label>
+        <input asp-for="ShoppingList.Amount" class="form-control" placeholder="Enter amount" />
+
     </div>
 
     <button type="submit" class="btn btn-primary">Create Shopping List</button>

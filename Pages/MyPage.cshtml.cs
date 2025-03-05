@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ListLife.Pages
 {
-    //[Authorize]
+    [Authorize]
     public class MyPageModel : PageModel
     {
         private readonly ApplicationDbContext _context;

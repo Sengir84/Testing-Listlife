@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ListLife.Models
 {
+    /* Representerar själva användaren och deras information (t.ex. användarnamn, e-post etc.) 
+     * och innehåller en lista med shoppinglistor som användaren har.*/
     public class UserList : IdentityUser
     {
         //Name of the list
