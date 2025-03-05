@@ -1,3 +1,4 @@
+/* google fonts*/
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 
@@ -5,6 +6,7 @@ html {
     font-size: 14px;
 }
 
+/* responsiv fontstorlek ändras efter skärmstorlek*/
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -17,10 +19,12 @@ html {
 }
 
 
+/* html elementen sätts till 100% av skärmhöjden så sidan fyller hela fönstret*/
 html {
     position: relative;
     min-height: 100%;
 }
+
 
 body {
     margin-bottom: 60px;
@@ -40,7 +44,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-
+/*knappdesign*/
 .custom-btn {
     background-color: #d48cff;
     color: white;
@@ -52,10 +56,13 @@ body {
     margin: 5px;
 }
 
+/* knappen får en mörkare färg när man står över den med musen*/
     .custom-btn:hover {
         background-color: #bf73e6;
     }
 
-    .custom-btn i {
+
+    /* om det blir aktuellt med ikon på en knapp så får den distans till texten*/
+    /*.custom-btn i {
         margin-right: 8px;
-    }
+    }*/
