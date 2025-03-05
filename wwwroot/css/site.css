@@ -12,7 +12,7 @@ html {
         font-size: 16px;
     }
 }
-
+    
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -28,9 +28,9 @@ html {
 
 body {
     margin-bottom: 60px;
-    background-color: #2c2c2c; 
-    color: #ffffff; 
-    font-family: 'Poppins', sans-serif;
+    background-color: #2c2c2c !important;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif !important;
 }
 
 .welcome-title {
@@ -46,19 +46,19 @@ body {
 
 /*knappdesign*/
 .custom-btn {
-    background-color: #d48cff;
-    color: white;
-    font-size: 1.2rem;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.3s;
-    margin: 5px;
+    background-color: #d48cff !important;
+    color: white !important;
+    font-size: 1.2rem !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    transition: 0.3s !important;
+    margin: 5px !important;
 }
 
 /* knappen får en mörkare färg när man står över den med musen*/
     .custom-btn:hover {
-        background-color: #bf73e6;
+        background-color: #bf73e6 !important;
     }
 
 
