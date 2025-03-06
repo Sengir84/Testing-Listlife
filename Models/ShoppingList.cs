@@ -13,11 +13,8 @@
         // ConnectionTable
         public string UserId { get; set; }
         public UserList UserList { get; set; }
-        
 
-        // FK till Category
-        //public int CategoryId { get; set; }
-        public Category Category { get; set; }
-
+        //Stores category of product
+        public string Category { get; set; }
     }
 }

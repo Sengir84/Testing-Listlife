@@ -53,9 +53,8 @@ namespace ListLife.Pages
                 // Koppla shoppinglistan till användaren och sätt användarens ID
                 ShoppingList.UserId = user.Id;
                 ShoppingList.UserList = user;
-
-                // Hur kommer jag åt ListName från UserList?
-                // ShoppingList.ListName = user.ListName;
+                ShoppingList.Category ??= "Other";  // Om kategorin är null, sätt den till "Övrigt"
+               
 
                 // Lägg till shoppinglistan i databasen
                 Dbcontext.ShoppingLists.Add(ShoppingList);
