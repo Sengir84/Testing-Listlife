@@ -39,7 +39,7 @@ namespace ListLife.Pages
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync() // KOPPLA IN TITLE HÄR? 
         {
             var user = await userManager.GetUserAsync(User);
 
@@ -49,7 +49,8 @@ namespace ListLife.Pages
                 ShoppingList.UserId = user.Id;
                 ShoppingList.UserList = user;
                 ShoppingList.Category ??= "Other";  // Om kategorin är null, sätt den till "Övrigt"
-               
+                ShoppingList.Title ??= "New List";  // Om titeln är null, sätt den till "Ny lista"
+
 
                 // Lägg till shoppinglistan i databasen
                 Dbcontext.ShoppingLists.Add(ShoppingList);

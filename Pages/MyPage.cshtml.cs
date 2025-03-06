@@ -42,30 +42,6 @@ namespace ListLife.Pages
 
         }
 
-        //public async Task<IActionResult> OnPostCreateAsync()
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        await OnGetAsync();
-        //        return Page();
-        //    }
-
-        //    //Get currently logged in user id
-        //    var userId = _userManager.GetUserId(User);
-        //    var newList = new UserList
-        //    {
-        //        ListName = Request.Form["ListName"],
-        //        Id = userId
-        //    };
-
-        //    //Add list to database
-        //    _context.Users.Add(newList);
-        //    await _context.SaveChangesAsync();
-
-
-        //    return RedirectToPage();
-        //}
-
         public async Task<IActionResult> OnPostCreateAsync()
         {
             if (!ModelState.IsValid)
@@ -74,29 +50,16 @@ namespace ListLife.Pages
                 return Page();
             }
 
-            // Hämta den inloggade användarens ID
+            //Get currently logged in user id
             var userId = _userManager.GetUserId(User);
-
-            // Skapa en ny UserList
-            var newUserList = new UserList
+            var newList = new UserList
             {
-                ListName = Request.Form["ListName"], // ListName från formuläret
+                ListName = Request.Form["ListName"],
                 Id = userId
             };
 
-            // Lägg till UserList i databasen
-            _context.Users.Add(newUserList);
-            await _context.SaveChangesAsync();
-
-            // Skapa en ny ShoppingList och bind Title till UserList.ListName
-            var newShoppingList = new ShoppingList
-            {
-                Title = newUserList.ListName,  // Sätt Title till ListName från UserList
-                UserId = userId
-            };
-
-            // Lägg till ShoppingList i databasen
-            _context.ShoppingLists.Add(newShoppingList);
+            //Add list to database
+            _context.Users.Add(newList);
             await _context.SaveChangesAsync();
 
             return RedirectToPage();
