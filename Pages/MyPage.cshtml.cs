@@ -26,7 +26,6 @@ namespace ListLife.Pages
         //Hold the user's lists
         public IList<UserList> UserList { get; set; }
 
-        // La till ShoppingList / Nän 
         // List to hold shopping lists for the logged-in user
         public IList<ShoppingList> ShoppingLists { get; set; }
 
@@ -53,14 +52,14 @@ namespace ListLife.Pages
 
             //Get currently logged in user id
             var userId = _userManager.GetUserId(User);
-            var newList = new UserList
+            var newList = new ShoppingList
             {
                 ListName = Request.Form["ListName"],
-                Id = userId
+                UserId = userId
             };
 
             //Add list to database
-            _context.Users.Add(newList);
+            _context.ShoppingLists.Add(newList);
             await _context.SaveChangesAsync();
 
 

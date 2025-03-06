@@ -7,8 +7,8 @@ namespace ListLife.Models
      * och innehåller en lista med shoppinglistor som användaren har.*/
     public class UserList : IdentityUser
     {
-        //Name of the list
-        public string? ListName { get; set; }
+        ////Name of the list
+        //public string? ListName { get; set; }
 
         //FK to user
 
