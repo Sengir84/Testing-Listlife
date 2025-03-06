@@ -18,6 +18,6 @@
         public string Category { get; set; }
 
         // Name of List
-        public string Title { get; set; }
+        public string? Title { get; set; }
     }
 }

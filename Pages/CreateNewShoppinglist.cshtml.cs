@@ -30,11 +30,6 @@ namespace ListLife.Pages
 
         public string UserListName { get; set; }
 
-
-        //public void OnGet()
-        //{
-        //}
-
         public async Task OnGetAsync()
         {
             var user = await userManager.GetUserAsync(User); // Hämta den inloggade användaren
