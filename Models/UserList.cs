@@ -8,7 +8,7 @@ namespace ListLife.Models
     public class UserList : IdentityUser
     {
         ////Name of the list
-        //public string? ListName { get; set; }
+        public string? ListName { get; set; }
 
         //FK to user
 

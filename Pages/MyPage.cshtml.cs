@@ -52,14 +52,14 @@ namespace ListLife.Pages
 
             //Get currently logged in user id
             var userId = _userManager.GetUserId(User);
-            var newList = new ShoppingList
+            var newList = new UserList
             {
                 ListName = Request.Form["ListName"],
-                UserId = userId
+                Id = userId
             };
 
             //Add list to database
-            _context.ShoppingLists.Add(newList);
+            _context.Users.Add(newList);
             await _context.SaveChangesAsync();
 
 

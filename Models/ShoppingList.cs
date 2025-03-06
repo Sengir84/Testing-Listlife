@@ -16,8 +16,5 @@
 
         //Stores category of product
         public string Category { get; set; }
-
-        //Name of the list
-        public string? ListName { get; set; }
     }
 }
