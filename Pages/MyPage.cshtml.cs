@@ -7,6 +7,7 @@ using ListLife.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ListLife.Pages
 {
@@ -33,7 +34,12 @@ namespace ListLife.Pages
         {
             //Get user
             var user = await _userManager.GetUserAsync(User);
-
+            if (user != null)
+            {
+                
+                //Get user's shopping lists
+                ShoppingLists = await _context.ShoppingLists.Where(u => u.UserId == user.Id).ToListAsync();
+            }
 
         }
 
