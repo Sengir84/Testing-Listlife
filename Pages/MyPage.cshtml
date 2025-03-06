@@ -60,7 +60,7 @@
                     @foreach (var list in Model.ShoppingLists)
                     {
                         <li>
-                            <strong>@list.ListName</strong>
+                            <strong>@list.Title</strong>
 
                             <!-- Ta bort-knapp med papperskorgsikon -->
                             <form asp-page="/MyPage" method="post" style="display:inline;">
@@ -73,7 +73,7 @@
                     }
                 </ul>
             }
-            else
+            else 
             {
                 <p>No Shoppinglist(s) found.</p>
             }

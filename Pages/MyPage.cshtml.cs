@@ -66,5 +66,22 @@ namespace ListLife.Pages
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostDeleteAsync()
+        {
+            // Hämta listId från den dolda input-fältet
+            var listId = Request.Form["listId"];
+
+            // Hämta den lista som ska tas bort från databasen
+            var listToDelete = await _context.Users.FirstOrDefaultAsync(u => u.Id == listId);
+
+            if (listToDelete != null)
+            {
+                // Ta bort listan
+                _context.Users.Remove(listToDelete);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToPage();
+        }
     }
 }
