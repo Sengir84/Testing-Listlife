@@ -76,29 +76,25 @@
             </ul>
         </div>
 
-        <button type="submit">Add Products</button>
+        <button type="submit" onclick="ShowMessage">Add Products</button>
         <button type="submit">Save Changes</button>
 
     </form>
 }
 
+@if (Model.AddProduct != null)
+{
    <h2>Add new Product:</h2>
-       <form method="post" asp-page-handler="Add">
+       <form method="post" asp-page-handler="AddProduct">
             <div>
-
-
                 <label>Product:</label>
-                <input type="text" id="category" name="category">
+@*                 <input type="text" id="category" name="category"> *@
+            <input asp-for="AddProduct.Product" class="form-control" placeholder="Enter Product" />
             </div>
 
             <div>
                 <label>Amount</label>
-                <select id="amount" name="amount">
-                    @for (int i = 1; i <= 15; i++)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
+            <input asp-for="AddProduct.Amount" class="form-control" placeholder="Enter Amount" />
             </div>
 
             <div>
@@ -116,6 +112,15 @@
 
             <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
 </form>
+}
+
+
+<script>
+    function showMessage() {
+        alert("Button clicked!");
+    }
+</script>
+
 <style>
 
     .icon {

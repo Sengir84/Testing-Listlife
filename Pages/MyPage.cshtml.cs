@@ -32,6 +32,8 @@ namespace ListLife.Pages
         //[BindProperty]
         public ShoppingList EditList { get; set; }
 
+        public ShoppingList AddProduct { get; set; }
+
         //Lista för att hålla produkterna
         public IList<ShoppingList> ProductsInList { get; set; }
 
@@ -102,8 +104,10 @@ namespace ListLife.Pages
         }
 
         // Lägg till ny produkt i vald lista
-        public async Task<IActionResult> OnPostAddAsync(int listId)
+        public async Task<IActionResult> OnPostAddProductAsync(int listId)
         {
+
+
             return Page();
         }
 
