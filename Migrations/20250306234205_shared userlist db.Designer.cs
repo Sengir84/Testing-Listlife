@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ListLife.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250304140853_init")]
-    partial class init
+    [Migration("20250306234205_shared userlist db")]
+    partial class shareduserlistdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace ListLife.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ListLife.Models.Category", b =>
+            modelBuilder.Entity("ListLife.Models.SharedList", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,13 +33,20 @@ namespace ListLife.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("SharedWithUserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ShoppingListId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("SharedWithUserId");
+
+                    b.HasIndex("ShoppingListId");
+
+                    b.ToTable("SharedList");
                 });
 
             modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
@@ -54,8 +61,9 @@ namespace ListLife.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Product")
                         .IsRequired()
@@ -69,8 +77,6 @@ namespace ListLife.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserListId");
 
@@ -97,7 +103,6 @@ namespace ListLife.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ListName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -125,9 +130,6 @@ namespace ListLife.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShoppingId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -286,19 +288,30 @@ namespace ListLife.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
+            modelBuilder.Entity("ListLife.Models.SharedList", b =>
                 {
-                    b.HasOne("ListLife.Models.Category", "Category")
+                    b.HasOne("ListLife.Models.UserList", "SharedWithUser")
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("SharedWithUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ListLife.Models.ShoppingList", "ShoppingList")
+                        .WithMany("SharedWith")
+                        .HasForeignKey("ShoppingListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SharedWithUser");
+
+                    b.Navigation("ShoppingList");
+                });
+
+            modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
+                {
                     b.HasOne("ListLife.Models.UserList", "UserList")
                         .WithMany("ShoppingLists")
                         .HasForeignKey("UserListId");
-
-                    b.Navigation("Category");
 
                     b.Navigation("UserList");
                 });
@@ -352,6 +365,11 @@ namespace ListLife.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
+                {
+                    b.Navigation("SharedWith");
                 });
 
             modelBuilder.Entity("ListLife.Models.UserList", b =>
