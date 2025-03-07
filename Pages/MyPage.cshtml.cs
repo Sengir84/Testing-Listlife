@@ -32,7 +32,7 @@ namespace ListLife.Pages
         //[BindProperty]
         public ShoppingList EditList { get; set; }
 
-        public ShoppingList AddProduct { get; set; }
+        public ShoppingList AddProduct { get; set; } 
 
 
         //Lista för att hålla produkterna

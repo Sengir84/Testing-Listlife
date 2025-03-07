@@ -3,21 +3,11 @@
 @{
 }
 
-<h1 class="Header">Welcome to your ShoppingLists</h1>
+<h1 class="Header">Welcome to MyPage</h1>
 
 <section class="container">
 
-    
     <div class="left-Section">
-
-            <form asp-page="/CreateNewShoppingList" method="get">
-                <button type="submit" class="btnNewShoppingList">Create new Shopping List</button>
-            </form>
-                </div>
-
-
-
-    <div class="right-Section">
         <h2>Your Shoppinglists:</h2>
             <div>
 
@@ -38,7 +28,7 @@
 
                             <form method="post" asp-page-handler="Edit" style="display:inline;">
                                 <input type="hidden" name="listId" value="@list.Id" />
-                                <button type="submit" class="btn btn-primary small-btn" title="Edit">
+                                <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                             </form>
@@ -48,7 +38,17 @@
         }            
         </div>
     </div>
+
+    <div class="right-Section">
+
+        <form asp-page="/CreateNewShoppingList" method="get">
+            <button type="submit" class="btnNewShoppingList">Create new Shoppinglist</button>
+        </form>
+    </div>
+
 </section>
+
+
 
 @if (Model.EditList != null)
 {
