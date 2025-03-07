@@ -53,26 +53,30 @@
 
     <div class="right-Section">
         <h2>Your Shoppinglists:</h2>
-        <div>
-            @if (Model.ShoppingLists != null && Model.ShoppingLists.Any())
-            {
-                <ul>
-                    @foreach (var list in Model.ShoppingLists)
-                    {
-                        <li>
-                            <strong>@list.Title</strong>
+            <div>
 
-                            <!-- Ta bort-knapp med papperskorgsikon -->
-                            <form asp-page="/MyPage" method="post" style="display:inline;">
+        @if (Model.ShoppingLists != null && Model.ShoppingLists.Any())
+        {
+            <ul>
+                @foreach (var list in Model.ShoppingLists)
+                {
+                    <li>
+                        <strong>@list.Title</strong>
+
+                            <form method="post" asp-page-handler="Delete" style="display:inline;">
                                 <input type="hidden" name="listId" value="@list.Id" />
-                                <button type="submit" class="btn btn-danger" title="Delete">
-                                    <i class="bi bi-trash"></i> <!-- Papperskorgsikon från Bootstrap -->
+                                <button type="submit" class="btn btn-danger" title="Delete" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-trash"></i>
                                 </button>
+                                <button type="submit" class="btn btn-primary" title="Edit">
+                                    <i class="bi bi-pencil icon"></i> 
+                                    </button>
                             </form>
-                        </li>
-                    }
-                </ul>
-            }
+                    </li>
+                }
+            </ul>
+                }
+            
             else 
             {
                 <p>No Shoppinglist(s) found.</p>
@@ -84,6 +88,10 @@
 
 
 <style>
+
+    .icon {
+        font-size: 0.75em;
+    }
 
     .Header {
         margin-bottom: 20px;
@@ -108,6 +116,11 @@
         background-color: mediumpurple;
         border-radius: 8px;
         margin: 15px;
+    }
+
+    btn btn-primary,
+    btn btn-danger {
+        font-size: 15px;
     }
 
 </style>

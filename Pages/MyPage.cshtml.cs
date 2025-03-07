@@ -65,11 +65,18 @@ namespace ListLife.Pages
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync()
+        public async Task<IActionResult> OnPostDeleteAsync(int listId)
         {
+            // Hämta shoppinglistan från databasen baserat på listId
+            var deleteList = await _context.ShoppingLists.FindAsync(listId);
 
+            if (deleteList != null)
+            {
+                _context.ShoppingLists.Remove(deleteList);
+                await _context.SaveChangesAsync(); 
+            }
 
-            return RedirectToPage();
+            return RedirectToPage(); // Ladda om sidan för att uppdatera listan
         }
     }
 }
