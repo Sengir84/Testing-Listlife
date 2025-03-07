@@ -17,8 +17,7 @@ namespace ListLife.Data
         // Skapa tabell ShoppingLists i Databasen DbSet
         public DbSet<ShoppingList> ShoppingLists { get; set; }
 
-        // Skapa tabell för Categories i Databasen DbSet
-        public DbSet<Category> Categories { get; set; }
+       
 
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)

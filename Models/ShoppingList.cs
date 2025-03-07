@@ -28,5 +28,8 @@
         public string? Title { get; set; }
 
 
+
+        //Navigation property
+        public ICollection<SharedList> SharedWith { get; set; } = new List<SharedList>();
     }
 }
