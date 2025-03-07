@@ -45,15 +45,14 @@
                     </li>
                 }
             </ul>
-                }
-            
+        }            
         </div>
     </div>
 </section>
 
 @if (Model.EditList != null)
 {
-    <h2>Edit Shopping List</h2>
+    <h2>Edit Shopping List: @Model.EditList.Title</h2> // försöker koppla namnet på listan
     <form method="post" asp-page-handler="Save">
         <div>
             <ul>
@@ -76,7 +75,7 @@
             </ul>
         </div>
 
-        <button type="submit" onclick="ShowMessage">Add Products</button>
+        <button type="submit">Add Products</button>
         <button type="submit">Save Changes</button>
 
     </form>
@@ -115,11 +114,6 @@
 }
 
 
-<script>
-    function showMessage() {
-        alert("Button clicked!");
-    }
-</script>
 
 <style>
 

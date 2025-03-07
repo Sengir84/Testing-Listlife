@@ -34,6 +34,7 @@ namespace ListLife.Pages
 
         public ShoppingList AddProduct { get; set; }
 
+
         //Lista för att hålla produkterna
         public IList<ShoppingList> ProductsInList { get; set; }
 
