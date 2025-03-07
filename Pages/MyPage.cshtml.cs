@@ -35,6 +35,7 @@ namespace ListLife.Pages
         //Lista för att hålla produkterna
         public IList<ShoppingList> ProductsInList { get; set; }
 
+        // Hämtar Shoppinglistorna
         public async Task OnGetAsync()
         {
             //Get user
@@ -99,6 +100,5 @@ namespace ListLife.Pages
 
             return Page();
         }
-
     }
 }

@@ -81,10 +81,6 @@
             </ul>
                 }
             
-            else 
-            {
-                <p>No Shoppinglist(s) found.</p>
-            }
         </div>
     </div>
 </section>
@@ -94,36 +90,29 @@
     <h2>Edit Shopping List</h2>
     <form method="post" asp-page-handler="Save">
         <div>
+            <ul>
             <label for="Title">List Title</label>
             <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
+                <li>
+                    <div class="row">
+                        <div class="col">
+                            <input asp-for="EditList.Category" class="form-control" placeholder="Enter Category" />
+                        </div>
+                        <div class="col">
+                            <input asp-for="EditList.Product" class="form-control" placeholder="Enter Product" />
+                        </div>
+                        <div class="col">
+                            <input asp-for="EditList.Amount" class="form-control" placeholder="Enter Amount" />
+                        </div>
+                    </div>
+                </li>
 
-            <div>
-                <label>Category:</label>
-                <select name="ShoppingList.Category" class="form-control">
-                    <option value="">--Select Category--</option>
-                    <option value="FruitsVegetables">Fruits & Vegetables</option>
-                    <option value="Fridge ">Fridge items</option>
-                    <option value="Freezer">Freezer items</option>
-                    <option value="Pantry">Pantry items</option>
-                    <option value="Hygiene">Hygiene items</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-
-            <div>
-                <label asp-for="EditList.Product">Product Name:</label>
-                <input asp-for="EditList.Product" class="form-control" placeholder="Enter product name" />
-            </div>
-
-            <div>
-                <label asp-for="EditList.Amount">Amount:</label>
-                <input asp-for="EditList.Amount" class="form-control" placeholder="Enter amount" />
-
-            </div>
-
+            </ul>
         </div>
 
+        <button type="submit">Add Products</button>
         <button type="submit">Save Changes</button>
+
     </form>
 }
 
