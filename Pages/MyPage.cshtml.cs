@@ -32,7 +32,7 @@ namespace ListLife.Pages
         //[BindProperty]
         public ShoppingList EditList { get; set; }
 
-        public ShoppingList AddProduct { get; set; } 
+        public ShoppingList AddProduct { get; set; }
 
 
         //Lista för att hålla produkterna
@@ -122,11 +122,11 @@ namespace ListLife.Pages
             _context.ShoppingLists.Remove(editList);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage();
+            return Page();
         }
 
         // Spara Editerad lista
-        public async Task<IActionResult> OnPostSaveAsync(int listId)
+        public async Task<IActionResult> OnPostSaveEditedListAsync(int listId)
         {
             return Page();
         }
