@@ -9,7 +9,7 @@
 
     
     <div class="left-Section">
-    <h2>Add new Product:</h2>
+@*     <h2>Add new Product:</h2>
             <div>
             
 
@@ -41,14 +41,14 @@
             </div>
 
             <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
-                <div>
+                <div> *@
             <form asp-page="/CreateNewShoppingList" method="get">
                 <button type="submit" class="btnNewShoppingList">Create new Shopping List</button>
             </form>
                 </div>
 
 
-    </div>
+@*     </div> *@
 
 
     <div class="right-Section">
@@ -92,14 +92,38 @@
 @if (Model.EditList != null)
 {
     <h2>Edit Shopping List</h2>
-
-    <form method="post">
+    <form method="post" asp-page-handler="Save">
         <div>
             <label for="Title">List Title</label>
             <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
+
+            <div>
+                <label>Category:</label>
+                <select name="ShoppingList.Category" class="form-control">
+                    <option value="">--Select Category--</option>
+                    <option value="FruitsVegetables">Fruits & Vegetables</option>
+                    <option value="Fridge ">Fridge items</option>
+                    <option value="Freezer">Freezer items</option>
+                    <option value="Pantry">Pantry items</option>
+                    <option value="Hygiene">Hygiene items</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label asp-for="EditList.Product">Product Name:</label>
+                <input asp-for="EditList.Product" class="form-control" placeholder="Enter product name" />
+            </div>
+
+            <div>
+                <label asp-for="EditList.Amount">Amount:</label>
+                <input asp-for="EditList.Amount" class="form-control" placeholder="Enter amount" />
+
+            </div>
+
         </div>
 
-        <button type="submit" class="btn btn-success">Save Changes</button>
+        <button type="submit">Save Changes</button>
     </form>
 }
 

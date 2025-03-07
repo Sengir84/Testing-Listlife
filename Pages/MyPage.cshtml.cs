@@ -29,8 +29,11 @@ namespace ListLife.Pages
         // List to hold shopping lists for the logged-in user
         public IList<ShoppingList> ShoppingLists { get; set; }
 
-        [BindProperty]
+        //[BindProperty]
         public ShoppingList EditList { get; set; }
+
+        //Lista för att hålla produkterna
+        public IList<ShoppingList> ProductsInList { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -94,10 +97,8 @@ namespace ListLife.Pages
 
             EditList = editList;
 
-            // Skicka tillbaka till samma sida
             return Page();
         }
-
 
     }
 }
