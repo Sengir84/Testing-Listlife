@@ -29,6 +29,9 @@ namespace ListLife.Pages
         // List to hold shopping lists for the logged-in user
         public IList<ShoppingList> ShoppingLists { get; set; }
 
+        [BindProperty]
+        public ShoppingList EditList { get; set; }
+
         public async Task OnGetAsync()
         {
             //Get user
@@ -79,13 +82,22 @@ namespace ListLife.Pages
             return RedirectToPage(); // Ladda om sidan för att uppdatera listan
         }
 
-        public async Task<IActionResult> OnPostEditAsync()
+        public async Task<IActionResult> OnPostEditAsync(int listId)
         {
+            // Hämtar listan som ska redigeras
+            var editList = await _context.ShoppingLists.FindAsync(listId);
 
+            if (editList == null)
+            {
+                return NotFound(); 
+            }
 
+            EditList = editList;
 
-
-            return RedirectToPage();
+            // Skicka tillbaka till samma sida
+            return Page();
         }
+
+
     }
 }

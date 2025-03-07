@@ -89,6 +89,19 @@
     </div>
 </section>
 
+@if (Model.EditList != null)
+{
+    <h2>Edit Shopping List</h2>
+
+    <form method="post">
+        <div>
+            <label for="Title">List Title</label>
+            <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+}
 
 
 <style>
