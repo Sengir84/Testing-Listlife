@@ -105,11 +105,24 @@ namespace ListLife.Pages
         }
 
         // Lägg till ny produkt i vald lista
-        public async Task<IActionResult> OnPostAddProductAsync(int listId)
+        public async Task<IActionResult> OnPostAddProductAsync(string product, string category, decimal amount, int listId)
         {
+            // Hämtar listan som ska redigeras
+            var editList = await _context.ShoppingLists.FindAsync(listId);
 
+            var addNewProduct = new ShoppingList
+            {
+                Product = product,
+                Category = category,
+                Amount = amount,
+                UserId = editList.UserId,
+                UserList = editList.UserList
+            };
 
-            return Page();
+            _context.ShoppingLists.Remove(editList);
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage();
         }
 
         // Spara Editerad lista

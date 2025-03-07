@@ -16,18 +16,8 @@
         //Stores category of product
         public string Category { get; set; }
 
-
-
-
-
-
-
-
-
         // Name of List
         public string? Title { get; set; }
-
-
 
         //Navigation property
         public ICollection<SharedList> SharedWith { get; set; } = new List<SharedList>();
