@@ -100,5 +100,17 @@ namespace ListLife.Pages
 
             return Page();
         }
+
+        // Lägg till ny produkt i vald lista
+        public async Task<IActionResult> OnPostAddAsync(int listId)
+        {
+            return Page();
+        }
+
+        // Spara Editerad lista
+        public async Task<IActionResult> OnPostSaveAsync(int listId)
+        {
+            return Page();
+        }
     }
 }
