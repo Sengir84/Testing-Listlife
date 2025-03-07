@@ -78,5 +78,14 @@ namespace ListLife.Pages
 
             return RedirectToPage(); // Ladda om sidan för att uppdatera listan
         }
+
+        public async Task<IActionResult> OnPostEditAsync()
+        {
+
+
+
+
+            return RedirectToPage();
+        }
     }
 }

@@ -68,9 +68,13 @@
                                 <button type="submit" class="btn btn-danger" title="Delete" style="padding: 4px 8px; font-size: 75%;">
                                     <i class="bi bi-trash"></i>
                                 </button>
-                                <button type="submit" class="btn btn-primary" title="Edit">
-                                    <i class="bi bi-pencil icon"></i> 
-                                    </button>
+                            </form>
+
+                            <form method="post" asp-page-handler="Edit" style="display:inline;">
+                                <input type="hidden" name="listId" value="@list.Id" />
+                                <button type="submit" class="btn btn-primary small-btn" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
                             </form>
                     </li>
                 }
