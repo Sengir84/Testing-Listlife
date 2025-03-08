@@ -8,7 +8,7 @@
 
         public int Id { get; set; }
         public string Product { get; set; }
-        public string Amount { get; set; }
+        public decimal Amount { get; set; }
 
         // ConnectionTable
         public string UserId { get; set; }
