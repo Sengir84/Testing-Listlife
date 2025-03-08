@@ -1,4 +1,4 @@
-using ListLife.Data;
+Ôªøusing ListLife.Data;
 using ListLife.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +11,10 @@ namespace ListLife.Pages
 {
     public class CreateNewShoppingList : PageModel
     {
-        // instans av databasen fˆr att lagra listor
+        // instans av databasen f√∂r att lagra listor
         private readonly ApplicationDbContext Dbcontext;
 
-        // Hanterar anv‰ndare via ASP.NET Identity (UserManager) fˆr att h‰mta och hantera inloggade anv‰ndare
+        // Hanterar anv√§ndare via ASP.NET Identity (UserManager) f√∂r att h√§mta och hantera inloggade anv√§ndare
         private readonly UserManager<UserList> userManager;
 
         // Konstruktor
@@ -25,7 +25,7 @@ namespace ListLife.Pages
         }
 
         [BindProperty]
-        // Property fˆr att hÂlla anv‰ndarens shoppinglistor
+        // Property f√∂r att h√•lla anv√§ndarens shoppinglistor
         public ShoppingList ShoppingList { get; set; }
 
         public string UserListName { get; set; }
@@ -37,10 +37,10 @@ namespace ListLife.Pages
 
         public async Task OnGetAsync()
         {
-            var user = await userManager.GetUserAsync(User); // H‰mta den inloggade anv‰ndaren
+            var user = await userManager.GetUserAsync(User); // H√§mta den inloggade anv√§ndaren
             if (user != null)
             {
-                UserListName = user.ListName; 
+                UserListName = user.ListName;
             }
         }
 
@@ -50,15 +50,15 @@ namespace ListLife.Pages
 
             if (user != null)
             {
-                // Koppla shoppinglistan till anv‰ndaren och s‰tt anv‰ndarens ID
+                // Koppla shoppinglistan till anv√§ndaren och s√§tt anv√§ndarens ID
                 ShoppingList.UserId = user.Id;
                 ShoppingList.UserList = user;
-                ShoppingList.Category ??= "Other";  // Om kategorin ‰r null, s‰tt den till "÷vrigt"
-               
+                ShoppingList.Category ??= "Other";  // Om kategorin √§r null, s√§tt den till "√ñvrigt"
 
-                // L‰gg till shoppinglistan i databasen
+
+                // L√§gg till shoppinglistan i databasen
                 Dbcontext.ShoppingLists.Add(ShoppingList);
-                await Dbcontext.SaveChangesAsync();  // Spara ‰ndringarna i databasen
+                await Dbcontext.SaveChangesAsync();  // Spara √§ndringarna i databasen
             }
 
             return RedirectToPage("/MyPage");  // Omdirigera till annan sida efter att ha sparat listan

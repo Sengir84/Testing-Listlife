@@ -23,24 +23,23 @@ namespace ListLife.Pages
             _userManager = userManager;
         }
 
-        //Hold the user's lists
+        // Hold the user's lists
         public IList<UserList> UserList { get; set; }
 
-        // La till ShoppingList / Nän 
         // List to hold shopping lists for the logged-in user
         public IList<ShoppingList> ShoppingLists { get; set; }
 
         public async Task OnGetAsync()
         {
-            //Get user
+            // Get user
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
-                
-                //Get user's shopping lists
-                ShoppingLists = await _context.ShoppingLists.Where(u => u.UserId == user.Id).ToListAsync();
+                // Get user's shopping lists
+                ShoppingLists = await _context.ShoppingLists
+                    .Where(u => u.UserId == user.Id)
+                    .ToListAsync();
             }
-
         }
 
         public async Task<IActionResult> OnPostCreateAsync()
@@ -51,7 +50,7 @@ namespace ListLife.Pages
                 return Page();
             }
 
-            //Get currently logged in user id
+            // Get currently logged-in user ID
             var userId = _userManager.GetUserId(User);
             var newList = new UserList
             {
@@ -59,13 +58,11 @@ namespace ListLife.Pages
                 Id = userId
             };
 
-            //Add list to database
+            // Add list to database
             _context.Users.Add(newList);
             await _context.SaveChangesAsync();
 
-
             return RedirectToPage();
         }
-
     }
 }
