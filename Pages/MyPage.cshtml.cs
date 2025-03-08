@@ -85,7 +85,7 @@ namespace ListLife.Pages
             if (string.IsNullOrWhiteSpace(UserEmail))
             {
                 Message = "Enter a valid email address";
-                return Page();
+                return RedirectToPage();
             }
 
             var userToShareWith = await _userManager.FindByEmailAsync(UserEmail);
@@ -94,7 +94,7 @@ namespace ListLife.Pages
             //Message for alert if user not found
                 TempData["Message"] = "User not found";
                 TempData["MessageType"] = "error";
-                return Page();
+                return RedirectToPage();
             }
             //Control if the list is already shared with the user
             bool alreadyShared = await _context.SharedLists
