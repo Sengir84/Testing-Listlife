@@ -1,4 +1,4 @@
-﻿@page 
+﻿@page
 @model ListLife.Pages.MyPageModel
 @{
 }
@@ -12,50 +12,43 @@
 <h1 class="Header">Welcome to your ShoppingLists</h1>
 
 <section class="container">
-
-    
     <div class="left-Section">
-    <h2>Add new Product:</h2>
-            <div>
-            
+        <h2>Add new Product:</h2>
+        <div>
+            <label>Product:</label>
+            <input type="text" id="category" name="category">
+        </div>
 
-                <label>Product:</label>
-                <input type="text" id="category" name="category">
-            </div>
+        <div>
+            <label>Amount</label>
+            <select id="amount" name="amount">
+                @for (int i = 1; i <= 15; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </select>
+        </div>
 
-            <div>
-                <label>Amount</label>
-                <select id="amount" name="amount">
-                    @for (int i = 1; i <= 15; i++)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
-            </div>
-
-            <div>
-                <label>Category:</label>
+        <div>
+            <label>Category:</label>
             <select>
                 <option value="">--Select Category--</option>
-                    <option value="FruitsVegetables">Fruits & Vegetables</option>
-                    <option value="Fridge ">Fridge items</option>
-                    <option value="Freezer">Freezer items</option>
-                    <option value="Pantry">Pantry items</option>
-                    <option value="Hygiene">Hygiene items</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+                <option value="FruitsVegetables">Fruits & Vegetables</option>
+                <option value="Fridge">Fridge items</option>
+                <option value="Freezer">Freezer items</option>
+                <option value="Pantry">Pantry items</option>
+                <option value="Hygiene">Hygiene items</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
 
-            <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
-                <div>
+        <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
+        <div>
             <form asp-page="/CreateNewShoppingList" method="get">
                 <button type="submit" class="btnNewShoppingList">Create new Shopping List</button>
             </form>
-                </div>
-
-
+        </div>
     </div>
-
 
     <div class="right-Section">
         <h2>Your Shoppinglists:</h2>
@@ -101,16 +94,13 @@
     </div>
 </section>
 
-
-
 <style>
-
     .Header {
         margin-bottom: 20px;
     }
 
     .container {
-        display: flex;    
+        display: flex;
         justify-content: space-between;
     }
 
@@ -132,5 +122,4 @@
         border-radius: 8px;
         margin: 15px;
     }
-
 </style>
