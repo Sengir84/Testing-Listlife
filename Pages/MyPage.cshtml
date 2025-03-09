@@ -52,14 +52,14 @@
 
 @if (Model.EditList != null)
 {
-    <h2>Edit Shopping List: @Model.EditList.Title</h2> 
+    <h2>Edit Shopping List: @Model.EditList.Title</h2>
     <form method="post" asp-page-handler="SaveChanges">
 
-        <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id"/>
+        <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
         <div>
             <ul>
-            <label for="Title">List Title</label>
-            <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
+                <label for="Title">List Title</label>
+                <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
                 <li>
                     <div class="row">
                         <div class="col">
@@ -81,51 +81,43 @@
                         </div>
                     </div>
                 </li>
-
             </ul>
         </div>
 
         <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
         <button type="submit" class="btn btn-success" asp-page-handler="SaveChanges">Save Changes</button>
-        <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button> 
-
+        <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
     </form>
-}
 
+    <div id="addProductForm" style="display: none;">
+        <h3>Add a New Product</h3>
+        <form method="post" asp-page-handler="AddProduct">
 
-@if (Model.AddNewProduct != null)
-{
-<div id="addProductForm" style="display: none;">
-    <h2>Add new Product to @Model.AddNewProduct.Title:</h2>
-    <form method="post" asp-page-handler="AddProduct">
+            <input type="hidden" name="AddNewProduct.ListId" value="@Model.EditList.Id" />
 
-            <input type="hidden" name="AddNewProduct.ListId" value="@Model.AddNewProduct.Id" />
-        <div>
-            <label for="Product">Product:</label>
-                <input asp-for="AddNewProduct.Product" id="Product" name="Product" class="form-control" placeholder="Enter Product" />
-        </div>
+            <div class="row">
+                <div class="col">
+                    <input type="text" name="AddNewProduct.Product" class="form-control" placeholder="Enter Product" />
+                </div>
+                <div class="col">
+                    <input type="number" name="AddNewProduct.Amount" class="form-control" placeholder="Enter Amount" />
+                </div>
+                <div class="col">
+                    <select name="AddNewProduct.Category" class="form-control">
+                        <option value="">--Select Category--</option>
+                        <option value="FruitsVegetables">Fruits & Vegetables</option>
+                        <option value="Fridge">Fridge items</option>
+                        <option value="Freezer">Freezer items</option>
+                        <option value="Pantry">Pantry items</option>
+                        <option value="Hygiene">Hygiene items</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
 
-        <div>
-            <label for="Amount">Amount:</label>
-                <input asp-for="AddNewProduct.Amount" id="Amount" name="Amount" class="form-control" placeholder="Enter Amount" />
-        </div>
-
-        <div>
-            <label for="Category">Category:</label>
-            <select asp-for="AddNewProduct.Category" id="Category" name="Category" class="form-control">
-                <option value="">--Select Category--</option>
-                <option value="FruitsVegetables">Fruits & Vegetables</option>
-                <option value="Fridge">Fridge items</option>
-                <option value="Freezer">Freezer items</option>
-                <option value="Pantry">Pantry items</option>
-                <option value="Hygiene">Hygiene items</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-success">Add to ShoppingList</button>
-    </form>
-</div>
+            <button type="submit" class="btn btn-success">Add to Shopping List</button>
+        </form>
+    </div>
 }
 
 <script>
