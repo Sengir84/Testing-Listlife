@@ -12,9 +12,14 @@ namespace ListLife.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-
+            
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/MyPage");
+            }
+            return Page();
         }
     }
 }

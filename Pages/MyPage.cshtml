@@ -1,13 +1,19 @@
-﻿@page 
+﻿@page
 @model ListLife.Pages.MyPageModel
 @{
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-@TempData["MessageType"]" role="alert">
+        @TempData["Message"]
+    </div>
 }
 
 <h1 class="Header">Welcome to MyPage</h1>
 
 <section class="container">
 
-    <div class="left-Section">
+    
         <h2>Your Shoppinglists:</h2>
             <div>
 
@@ -38,7 +44,7 @@
         }            
         </div>
     </div>
-
+            </div>
     <div class="right-Section">
 
         <form asp-page="/CreateNewShoppingList" method="get">
@@ -62,7 +68,7 @@
                 {
                     <li>@product.Name - @product.Amount @product.Category</li>
                 }
-
+            
                 <label for="Title">List Title</label>
                 <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
 
@@ -87,11 +93,11 @@
                 </div>
 
             </ul>
-        </div>
-
+  
         <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
         <button type="submit" class="btn btn-success">Save Changes</button>
         <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
+    </div>
     </form>
 
     <div id="addProductForm" style="display: none;">
@@ -99,7 +105,7 @@
         <form method="post" asp-page-handler="AddProduct">
             <!-- Hämta ShoppingList ID -->
             <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
-
+            <div>
             <div class="row">
                 <div class="col">
                     <input type="text" name="productName" class="form-control" placeholder="Enter Product" required />
@@ -122,8 +128,46 @@
 
             <button type="submit" class="btn btn-success">Add to Shopping List</button>
         </form>
-    </div>
 
+
+
+                @if(Model.ShoppingLists!= null)
+                {
+                    foreach (var list in Model.ShoppingLists)
+                    {
+                        <div>
+                            <p><Strong>Product:</strong>@list.Product</p>
+                            <p><Strong>Category:</strong>@list.Category</p>
+                            <p><Strong>Amount:</strong>@list.Amount</p>
+                      
+                        @* functions for sharing shoppinglists *@
+                        <form method="post">
+                            <input type="email" asp-for="UserEmail" placeholder="Enter user´s email" required/>
+                            <button type="submit" asp-page-handler="Share" asp-route-listId="@list.Id">Share</button>
+
+                        </form>
+                         
+
+                         </div>
+                    }   
+                }
+            <h2>Shared lists</h2>
+            @if (Model.SharedShoppingLists != null)
+            {
+                foreach (var list in Model.SharedShoppingLists)
+                {
+                    <div>
+                        <p><Strong>Product:</strong>@list.Product</p>
+                        <p><Strong>Category:</strong>@list.Category</p>
+                        <p><Strong>Amount:</strong>@list.Amount</p>
+                    </div>
+                }
+            }
+            else 
+            {
+                <p>No Shoppinglist(s) found.</p>
+            }
+        </div>
 }
 
 @* Script for showing form Add New Product *@
@@ -133,18 +177,20 @@
     }
 </script>
 
-<style>
 
+<style>
     .icon {
         font-size: 0.75em;
     }
+
+
 
     .Header {
         margin-bottom: 20px;
     }
 
     .container {
-        display: flex;    
+        display: flex;
         justify-content: space-between;
     }
 
@@ -160,11 +206,6 @@
         background-color: mediumpurple;
         border-radius: 8px;
         margin: 15px;
-    }
-
-    btn btn-primary,
-    btn btn-danger {
-        font-size: 15px;
     }
 
 </style>

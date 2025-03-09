@@ -16,6 +16,7 @@ namespace ListLife.Data
 
         // Skapa tabell ShoppingLists i Databasen DbSet
         public DbSet<ShoppingList> ShoppingLists { get; set; }
+        public DbSet<SharedList> SharedLists { get; set; }
 
         public DbSet<Product> Products { get; set; }
 

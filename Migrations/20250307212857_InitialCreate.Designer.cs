@@ -4,6 +4,7 @@ using ListLife.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ListLife.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250307212857_InitialCreateTemp")]
+    partial class InitialCreateTemp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,35 +24,6 @@ namespace ListLife.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ListLife.Models.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShoppingListId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShoppingListId");
-
-                    b.ToTable("Products");
-                });
 
             modelBuilder.Entity("ListLife.Models.SharedList", b =>
                 {
@@ -72,7 +46,7 @@ namespace ListLife.Migrations
 
                     b.HasIndex("ShoppingListId");
 
-                    b.ToTable("SharedLists");
+                    b.ToTable("SharedList");
                 });
 
             modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
@@ -316,17 +290,6 @@ namespace ListLife.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ListLife.Models.Product", b =>
-                {
-                    b.HasOne("ListLife.Models.ShoppingList", "ShoppingList")
-                        .WithMany("Products")
-                        .HasForeignKey("ShoppingListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ShoppingList");
-                });
-
             modelBuilder.Entity("ListLife.Models.SharedList", b =>
                 {
                     b.HasOne("ListLife.Models.UserList", "SharedWithUser")
@@ -408,8 +371,6 @@ namespace ListLife.Migrations
 
             modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
                 {
-                    b.Navigation("Products");
-
                     b.Navigation("SharedWith");
                 });
 
