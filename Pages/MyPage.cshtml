@@ -2,6 +2,12 @@
 @model ListLife.Pages.MyPageModel
 @{
 }
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-@TempData["MessageType"]" role="alert">
+        @TempData["Message"]
+    </div>
+}
 
 <h1 class="Header">Welcome to your ShoppingLists</h1>
 
@@ -46,19 +52,41 @@
 
     <div class="right-Section">
         <h2>Your Shoppinglists:</h2>
-        <div>
-            @if (Model.ShoppingLists != null)
+            <div>
+
+                @if(Model.ShoppingLists!= null)
+                {
+                    foreach (var list in Model.ShoppingLists)
+                    {
+                        <div>
+                            <p><Strong>Product:</strong>@list.Product</p>
+                            <p><Strong>Category:</strong>@list.Category</p>
+                            <p><Strong>Amount:</strong>@list.Amount</p>
+                      
+                        @* functions for sharing shoppinglists *@
+                        <form method="post">
+                            <input type="email" asp-for="UserEmail" placeholder="Enter user´s email" required/>
+                            <button type="submit" asp-page-handler="Share" asp-route-listId="@list.Id">Share</button>
+
+                        </form>
+                         
+
+                         </div>
+                    }   
+                }
+            <h2>Shared lists</h2>
+            @if (Model.SharedShoppingLists != null)
             {
-                foreach (var list in Model.ShoppingLists)
+                foreach (var list in Model.SharedShoppingLists)
                 {
                     <div>
-                        <p><strong>Product:</strong> @list.Product</p>
-                        <p><strong>Category:</strong> @list.Category</p>
-                        <p><strong>Amount:</strong> @list.Amount</p>
+                        <p><Strong>Product:</strong>@list.Product</p>
+                        <p><Strong>Category:</strong>@list.Category</p>
+                        <p><Strong>Amount:</strong>@list.Amount</p>
                     </div>
                 }
             }
-            else
+            else 
             {
                 <p>No Shoppinglist(s) found.</p>
             }
