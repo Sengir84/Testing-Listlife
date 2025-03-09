@@ -55,7 +55,7 @@
     <h2>Edit Shopping List: @Model.EditList.Title</h2> 
     <form method="post" asp-page-handler="SaveChanges">
 
-        <input type="hidden" asp-for="EditList.Id" />
+        <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id"/>
         <div>
             <ul>
             <label for="Title">List Title</label>

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ListLife.Pages
 {
@@ -33,7 +34,7 @@ namespace ListLife.Pages
         public ShoppingList EditList { get; set; }
 
         [BindProperty]
-        public ShoppingList AddNewProduct { get; set; }
+        public ShoppingList AddNewProduct { get; set; } = new ShoppingList();
 
 
         //Lista för att hålla produkterna
@@ -87,7 +88,7 @@ namespace ListLife.Pages
                 await _context.SaveChangesAsync(); 
             }
 
-            return RedirectToPage(); // Ladda om sidan för att uppdatera listan
+            return RedirectToPage(); 
         }
 
         public async Task<IActionResult> OnPostEditAsync(int listId)
@@ -113,12 +114,13 @@ namespace ListLife.Pages
         // POST för att lägga till ny produkt
         public async Task<IActionResult> OnPostAddProductAsync(int listId)
         {
+            Console.WriteLine($"List ID received: {listId}");
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            // Hämta inloggad användare
             var user = await _userManager.GetUserAsync(User);
 
             // Hämta shoppinglistan från databasen
@@ -141,10 +143,10 @@ namespace ListLife.Pages
             return RedirectToPage();
         }
 
-        // Spara Editerad lista
-        public async Task<IActionResult> OnPostSaveEditedListAsync(int listId)
-        {
-            return RedirectToPage();
-        }
+        //// Spara Editerad lista
+        //public async Task<IActionResult> OnPostSaveEditedListAsync(int listId)
+        //{
+        //    return RedirectToPage();
+        //}
     }
 }
