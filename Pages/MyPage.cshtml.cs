@@ -29,10 +29,11 @@ namespace ListLife.Pages
         // List to hold shopping lists for the logged-in user
         public IList<ShoppingList> ShoppingLists { get; set; }
 
-        //[BindProperty]
+        [BindProperty]
         public ShoppingList EditList { get; set; }
 
-        public ShoppingList AddProduct { get; set; }
+        [BindProperty]
+        public ShoppingList AddNewProduct { get; set; }
 
 
         //Lista för att hålla produkterna
@@ -104,31 +105,46 @@ namespace ListLife.Pages
             return Page();
         }
 
-        // Lägg till ny produkt i vald lista
-        public async Task<IActionResult> OnPostAddProductAsync(string product, string category, decimal amount, int listId)
+        public async Task<IActionResult> OnPostSaveChangesAsync(int listId)
         {
-            // Hämtar listan som ska redigeras
-            var editList = await _context.ShoppingLists.FindAsync(listId);
+            return RedirectToPage();
+        }
 
-            var addNewProduct = new ShoppingList
+        // POST för att lägga till ny produkt
+        public async Task<IActionResult> OnPostAddProductAsync(int listId)
+        {
+            if (!ModelState.IsValid)
             {
-                Product = product,
-                Category = category,
-                Amount = amount,
-                UserId = editList.UserId,
-                UserList = editList.UserList
-            };
+                return Page();
+            }
 
-            _context.ShoppingLists.Remove(editList);
+            // Hämta inloggad användare
+            var user = await _userManager.GetUserAsync(User);
+
+            // Hämta shoppinglistan från databasen
+            var shoppingList = await _context.ShoppingLists
+                .FirstOrDefaultAsync(x => x.Id == listId && x.UserId == user.Id);
+
+            if (shoppingList == null)
+            {
+                return NotFound();
+            }
+
+            shoppingList.Product += ", " + AddNewProduct.Product;  
+            shoppingList.Amount += AddNewProduct.Amount;           
+            shoppingList.Category = AddNewProduct.Category;        
+
+            // Uppdatera databasen
+            _context.ShoppingLists.Update(shoppingList);
             await _context.SaveChangesAsync();
 
-            return Page();
+            return RedirectToPage();
         }
 
         // Spara Editerad lista
         public async Task<IActionResult> OnPostSaveEditedListAsync(int listId)
         {
-            return Page();
+            return RedirectToPage();
         }
     }
 }
