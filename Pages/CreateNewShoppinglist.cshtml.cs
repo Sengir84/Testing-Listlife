@@ -39,7 +39,7 @@ namespace ListLife.Pages
             }
         }
 
-        public async Task<IActionResult> OnPostAsync() // KOPPLA IN TITLE HÄR? 
+        public async Task<IActionResult> OnPostAsync() 
         {
             var user = await userManager.GetUserAsync(User);
 

@@ -55,31 +55,37 @@
     <h2>Edit Shopping List: @Model.EditList.Title</h2>
     <form method="post" asp-page-handler="SaveChanges">
         <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
+
         <div>
             <ul>
+                @foreach (var product in Model.EditList.Products)
+                {
+                    <li>@product.Name - @product.Amount @product.Category</li>
+                }
+
                 <label for="Title">List Title</label>
                 <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
-                <li>
-                    <div class="row">
-                        <div class="col">
-                            <select asp-for="EditList.Category" id="Category" name="Category" class="form-control">
-                                <option value="">--Select Category--</option>
-                                <option value="FruitsVegetables">Fruits & Vegetables</option>
-                                <option value="Fridge">Fridge items</option>
-                                <option value="Freezer">Freezer items</option>
-                                <option value="Pantry">Pantry items</option>
-                                <option value="Hygiene">Hygiene items</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="col">
-                            <input asp-for="EditList.Product" class="form-control" placeholder="Enter Product" />
-                        </div>
-                        <div class="col">
-                            <input asp-for="EditList.Amount" class="form-control" placeholder="Enter Amount" />
-                        </div>
+
+                <div class="row">
+                    <div class="col">
+                        <select asp-for="EditList.Category" id="Category" name="Category" class="form-control">
+                            <option value="">--Select Category--</option>
+                            <option value="FruitsVegetables">Fruits & Vegetables</option>
+                            <option value="Fridge">Fridge items</option>
+                            <option value="Freezer">Freezer items</option>
+                            <option value="Pantry">Pantry items</option>
+                            <option value="Hygiene">Hygiene items</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
-                </li>
+                    <div class="col">
+                        <input asp-for="EditList.Product" class="form-control" placeholder="Enter Product" />
+                    </div>
+                    <div class="col">
+                        <input asp-for="EditList.Amount" class="form-control" placeholder="Enter Amount" />
+                    </div>
+                </div>
+
             </ul>
         </div>
 
@@ -91,18 +97,18 @@
     <div id="addProductForm" style="display: none;">
         <h3>Add a New Product</h3>
         <form method="post" asp-page-handler="AddProduct">
-
-            <input type="hidden" name="AddNewProduct.ListId" value="@Model.EditList.Id" />
+            <!-- Hämta ShoppingList ID -->
+            <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
 
             <div class="row">
                 <div class="col">
-                    <input type="text" name="AddNewProduct.Product" class="form-control" placeholder="Enter Product" />
+                    <input type="text" name="productName" class="form-control" placeholder="Enter Product" required />
                 </div>
                 <div class="col">
-                    <input type="number" name="AddNewProduct.Amount" class="form-control" placeholder="Enter Amount" />
+                    <input type="number" name="amount" class="form-control" placeholder="Enter Amount" required />
                 </div>
                 <div class="col">
-                    <select name="AddNewProduct.Category" class="form-control">
+                    <select name="category" class="form-control">
                         <option value="">--Select Category--</option>
                         <option value="FruitsVegetables">Fruits & Vegetables</option>
                         <option value="Fridge">Fridge items</option>
@@ -117,8 +123,10 @@
             <button type="submit" class="btn btn-success">Add to Shopping List</button>
         </form>
     </div>
+
 }
 
+@* Script for showing form Add New Product *@
 <script>
     function showAddProductForm() {
         document.getElementById("addProductForm").style.display = "block";

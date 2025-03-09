@@ -27,18 +27,19 @@ namespace ListLife.Pages
         //Hold the user's lists
         public IList<UserList> UserList { get; set; }
 
+        public ShoppingList ShoppingList { get; set; }
+
+
         // List to hold shopping lists for the logged-in user
         public IList<ShoppingList> ShoppingLists { get; set; }
+
+        //public IList<Product> Products { get; set; }
 
         [BindProperty]
         public ShoppingList EditList { get; set; }
 
         [BindProperty]
-        public ShoppingList AddNewProduct { get; set; } = new ShoppingList();
-
-
-        ////Lista för att hålla produkterna
-        //public IList<ShoppingList> ProductsInList { get; set; }
+        public ShoppingList AddNewProduct { get; set; }/* = new ShoppingList();*/
 
         // Hämtar Shoppinglistorna
         public async Task OnGetAsync()
@@ -91,6 +92,7 @@ namespace ListLife.Pages
             return RedirectToPage(); 
         }
 
+
         public async Task<IActionResult> OnPostEditAsync(int listId)
         {
             // Hämtar listan som ska redigeras
@@ -106,70 +108,54 @@ namespace ListLife.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostSaveChangesAsync(int listId)
+
+
+        public async Task<IActionResult> OnPostSaveChangesAsync(int shoppingListId)
         {
-            // Hämta shoppinglistan
             var shoppingList = await _context.ShoppingLists
-                .FirstOrDefaultAsync(x => x.Id == listId);
+                .Include(sl => sl.Products)  // Inkludera produkterna relaterade till shoppinglistan
+                .FirstOrDefaultAsync(sl => sl.Id == shoppingListId && sl.UserId == _userManager.GetUserId(User));
 
             if (shoppingList == null)
             {
-                return NotFound("TEST");
+                return NotFound();  
             }
 
-            // Uppdatera shoppinglistan med de nya värdena
             shoppingList.Title = EditList.Title;
-            shoppingList.Category = EditList.Category;
+            shoppingList.Category ??= "Other";  // Om kategorin är null, sätt den till "Other"
+            shoppingList.Product = EditList.Product;
+            shoppingList.Amount = EditList.Amount;
 
-            // Spara ändringar till databasen
             _context.ShoppingLists.Update(shoppingList);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage(); 
+            return Page();
         }
 
 
         // POST för att lägga till ny produkt
-        public async Task<IActionResult> OnPostAddProductAsync(int listId)
+        public async Task<IActionResult> OnPostAddProductAsync(int shoppingListId, string productName, int amount, string category)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            // Hämta inloggad användare
-            var user = await _userManager.GetUserAsync(User);
-
-            // Hämta shoppinglistan från databasen
+            // Hämta shoppinglistan från databasen baserat på shoppingListId
             var shoppingList = await _context.ShoppingLists
-                .FirstOrDefaultAsync(x => x.Id == listId && x.UserId == user.Id);
+                .FirstOrDefaultAsync(sl => sl.Id == shoppingListId);  // Hitta shoppinglistan med rätt Id
 
-            if (shoppingList == null)
+            // Skapa en ny produkt och koppla den till shoppinglistan
+            var newProduct = new Product
             {
-                return NotFound();
-            }
+                Name = productName,
+                Amount = amount,
+                Category = string.IsNullOrWhiteSpace(category) ? "Other" : category,
+                ShoppingListId = shoppingList.Id
+            };
 
-            // Hantera att lägga till den nya produkten i listan
-            if (!string.IsNullOrEmpty(shoppingList.Product))
-            {
-                // Om det finns redan produkter, lägg till den nya produkten med komma-separation
-                shoppingList.Product += ", " + AddNewProduct.Product;
-            }
-            else
-            {
-                // Om inga produkter finns, sätt den första produkten
-                shoppingList.Product = AddNewProduct.Product;
-            }
+            shoppingList.Products.Add(newProduct);
 
-            // Lägg till mängden och uppdatera kategori (om det är nödvändigt)
-            shoppingList.Amount += AddNewProduct.Amount;
-            shoppingList.Category = AddNewProduct.Category;
-
-            // Uppdatera shoppinglistan i databasen
             _context.ShoppingLists.Update(shoppingList);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage();
+            return Page();
         }
+
     }
 }
