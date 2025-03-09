@@ -54,7 +54,6 @@
 {
     <h2>Edit Shopping List: @Model.EditList.Title</h2>
     <form method="post" asp-page-handler="SaveChanges">
-
         <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
         <div>
             <ul>
@@ -85,7 +84,7 @@
         </div>
 
         <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
-        <button type="submit" class="btn btn-success" asp-page-handler="SaveChanges">Save Changes</button>
+        <button type="submit" class="btn btn-success">Save Changes</button>
         <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
     </form>
 

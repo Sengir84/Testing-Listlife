@@ -17,18 +17,7 @@ namespace ListLife.Data
         // Skapa tabell ShoppingLists i Databasen DbSet
         public DbSet<ShoppingList> ShoppingLists { get; set; }
 
-       
-
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-
-        //    modelBuilder.Entity<UserList>()
-        //        .HasMany(u => u.ShoppingLists)
-        //        .WithOne(s => s.UserList)
-        //        .HasForeignKey(s => s.UserId);
-        //}
+        public DbSet<Product> Products { get; set; }
 
     }
 }

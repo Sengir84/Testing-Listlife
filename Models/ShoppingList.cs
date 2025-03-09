@@ -21,5 +21,8 @@
 
         //Navigation property
         public ICollection<SharedList> SharedWith { get; set; } = new List<SharedList>();
+
+        // Lista av produkter i shoppinglistan
+        public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
