@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ListLife.Pages
 {
+
     public class CreateNewShoppingList : PageModel
     {
         // instans av databasen för att lagra listor
@@ -31,9 +32,6 @@ namespace ListLife.Pages
         public string UserListName { get; set; }
 
 
-        //public void OnGet()
-        //{
-        //}
 
         public async Task OnGetAsync()
         {

@@ -18,6 +18,7 @@
                 </div>
 
                 <div>
+
                     <label>Category:</label>
                     <select name="ShoppingList.Category" id="category" class="form-control" required>
                         <option value="">--Select Category--</option>
@@ -97,7 +98,7 @@
             return;
         }
 
-        // Sätt listans namn i realtidsrutan om det inte redan visas
+        // Sätt listans namn i realtidsrutan 
         if (shoppingList.length === 0 && listTitle !== "") {
             document.getElementById("listTitleDisplay").textContent = " " + listTitle;
         }
@@ -204,4 +205,3 @@
         cursor: pointer;
     }
 </style>
-
