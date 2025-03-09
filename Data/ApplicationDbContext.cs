@@ -18,18 +18,7 @@ namespace ListLife.Data
         public DbSet<ShoppingList> ShoppingLists { get; set; }
         public DbSet<SharedList> SharedLists { get; set; }
 
-
-
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-
-        //    modelBuilder.Entity<UserList>()
-        //        .HasMany(u => u.ShoppingLists)
-        //        .WithOne(s => s.UserList)
-        //        .HasForeignKey(s => s.UserId);
-        //}
+        public DbSet<Product> Products { get; set; }
 
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ListLife.Pages
 {
@@ -31,10 +32,20 @@ namespace ListLife.Pages
         //Hold the user's lists
         public IList<UserList> UserList { get; set; }
 
+        // La till ShoppingList / Nän 
         // List to hold shopping lists for the logged-in user
         public IList<ShoppingList> ShoppingLists { get; set; }
         public IList<ShoppingList> SharedShoppingLists { get; set; } = new List<ShoppingList>();
 
+        //public IList<Product> Products { get; set; }
+
+        [BindProperty]
+        public ShoppingList EditList { get; set; }
+
+        [BindProperty]
+        public ShoppingList AddNewProduct { get; set; }/* = new ShoppingList();*/
+
+        // Hämtar Shoppinglistorna
         public async Task OnGetAsync()
         {
             // Get user
@@ -78,18 +89,17 @@ namespace ListLife.Pages
             return RedirectToPage();
         }
 
-       public async Task<IActionResult> OnPostShareAsync(int listId)
+        public async Task<IActionResult> OnPostShareAsync(int listId)
         {
             if (string.IsNullOrWhiteSpace(UserEmail))
             {
                 Message = "Enter a valid email address";
                 return RedirectToPage();
             }
-
             var userToShareWith = await _userManager.FindByEmailAsync(UserEmail);
             if (userToShareWith == null)
             {
-            //Message for alert if user not found
+                //Message for alert if user not found
                 TempData["Message"] = "User not found";
                 TempData["MessageType"] = "error";
                 return RedirectToPage();
@@ -100,7 +110,7 @@ namespace ListLife.Pages
 
             if (alreadyShared)
             {
-            //Message for alert if list is already shared
+                //Message for alert if list is already shared
                 TempData["Message"] = "List is already shared with this user";
                 TempData["MessageType"] = "error";
                 return RedirectToPage();
@@ -120,5 +130,87 @@ namespace ListLife.Pages
             TempData["MessageType"] = "success";
             return RedirectToPage();
         }
+
+
+        public async Task<IActionResult> OnPostDeleteAsync(int listId)
+        {
+            // Hämta shoppinglistan från databasen baserat på listId
+            var deleteList = await _context.ShoppingLists.FindAsync(listId);
+
+            if (deleteList != null)
+            {
+                _context.ShoppingLists.Remove(deleteList);
+                await _context.SaveChangesAsync(); 
+            }
+
+            return RedirectToPage(); 
+        }
+
+
+
+        public async Task<IActionResult> OnPostEditAsync(int listId)
+        {
+            // Hämtar listan som ska redigeras
+            var editList = await _context.ShoppingLists.FindAsync(listId);
+
+            if (editList == null)
+            {
+                return NotFound(); 
+            }
+
+            EditList = editList;
+
+            return Page();
+        }
+
+
+
+        public async Task<IActionResult> OnPostSaveChangesAsync(int shoppingListId)
+        {
+            var shoppingList = await _context.ShoppingLists
+                .Include(sl => sl.Products)  // Inkludera produkterna relaterade till shoppinglistan
+                .FirstOrDefaultAsync(sl => sl.Id == shoppingListId && sl.UserId == _userManager.GetUserId(User));
+
+            if (shoppingList == null)
+            {
+                return NotFound();  
+            }
+
+            shoppingList.Title = EditList.Title;
+            shoppingList.Category ??= "Other";  // Om kategorin är null, sätt den till "Other"
+            shoppingList.Product = EditList.Product;
+            shoppingList.Amount = EditList.Amount;
+
+            _context.ShoppingLists.Update(shoppingList);
+            await _context.SaveChangesAsync();
+
+            return Page();
+        }
+
+
+        // POST för att lägga till ny produkt
+        public async Task<IActionResult> OnPostAddProductAsync(int shoppingListId, string productName, int amount, string category)
+        {
+            // Hämta shoppinglistan från databasen baserat på shoppingListId
+            var shoppingList = await _context.ShoppingLists
+                .FirstOrDefaultAsync(sl => sl.Id == shoppingListId);  // Hitta shoppinglistan med rätt Id
+
+            // Skapa en ny produkt och koppla den till shoppinglistan
+            var newProduct = new Product
+            {
+                Name = productName,
+                Amount = amount,
+                Category = string.IsNullOrWhiteSpace(category) ? "Other" : category,
+                ShoppingListId = shoppingList.Id
+            };
+
+            shoppingList.Products.Add(newProduct);
+
+            _context.ShoppingLists.Update(shoppingList);
+            await _context.SaveChangesAsync();
+
+            return Page();
+        }
+
     }
 }

@@ -9,50 +9,127 @@
     </div>
 }
 
-<h1 class="Header">Welcome to your ShoppingLists</h1>
+<h1 class="Header">Welcome to MyPage</h1>
 
 <section class="container">
-    <div class="left-Section">
-        <h2>Add new Product:</h2>
-        <div>
-            <label>Product:</label>
-            <input type="text" id="category" name="category">
-        </div>
 
-        <div>
-            <label>Amount</label>
-            <select id="amount" name="amount">
-                @for (int i = 1; i <= 15; i++)
-                {
-                    <option value="@i">@i</option>
-                }
-            </select>
-        </div>
-
-        <div>
-            <label>Category:</label>
-            <select>
-                <option value="">--Select Category--</option>
-                <option value="FruitsVegetables">Fruits & Vegetables</option>
-                <option value="Fridge">Fridge items</option>
-                <option value="Freezer">Freezer items</option>
-                <option value="Pantry">Pantry items</option>
-                <option value="Hygiene">Hygiene items</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btnAddToShoppingList">Add to ShoppingList</button>
-        <div>
-            <form asp-page="/CreateNewShoppingList" method="get">
-                <button type="submit" class="btnNewShoppingList">Create new Shopping List</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="right-Section">
+    
         <h2>Your Shoppinglists:</h2>
             <div>
+
+        @if (Model.ShoppingLists != null && Model.ShoppingLists.Any())
+        {
+            <ul>
+                @foreach (var list in Model.ShoppingLists)
+                {
+                    <li>
+                        <strong>@list.Title</strong>
+
+                            <form method="post" asp-page-handler="Delete" style="display:inline;">
+                                <input type="hidden" name="listId" value="@list.Id" />
+                                <button type="submit" class="btn btn-danger" title="Delete" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+
+                            <form method="post" asp-page-handler="Edit" style="display:inline;">
+                                <input type="hidden" name="listId" value="@list.Id" />
+                                <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </form>
+                    </li>
+                }
+            </ul>
+        }            
+        </div>
+    </div>
+            </div>
+    <div class="right-Section">
+
+        <form asp-page="/CreateNewShoppingList" method="get">
+            <button type="submit" class="btnNewShoppingList">Create new Shoppinglist</button>
+        </form>
+    </div>
+
+</section>
+
+
+
+@if (Model.EditList != null)
+{
+    <h2>Edit Shopping List: @Model.EditList.Title</h2>
+    <form method="post" asp-page-handler="SaveChanges">
+        <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
+
+        <div>
+            <ul>
+                @foreach (var product in Model.EditList.Products)
+                {
+                    <li>@product.Name - @product.Amount @product.Category</li>
+                }
+            
+                <label for="Title">List Title</label>
+                <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
+
+                <div class="row">
+                    <div class="col">
+                        <select asp-for="EditList.Category" id="Category" name="Category" class="form-control">
+                            <option value="">--Select Category--</option>
+                            <option value="FruitsVegetables">Fruits & Vegetables</option>
+                            <option value="Fridge">Fridge items</option>
+                            <option value="Freezer">Freezer items</option>
+                            <option value="Pantry">Pantry items</option>
+                            <option value="Hygiene">Hygiene items</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input asp-for="EditList.Product" class="form-control" placeholder="Enter Product" />
+                    </div>
+                    <div class="col">
+                        <input asp-for="EditList.Amount" class="form-control" placeholder="Enter Amount" />
+                    </div>
+                </div>
+
+            </ul>
+  
+        <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
+    </div>
+    </form>
+
+    <div id="addProductForm" style="display: none;">
+        <h3>Add a New Product</h3>
+        <form method="post" asp-page-handler="AddProduct">
+            <!-- Hämta ShoppingList ID -->
+            <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
+            <div>
+            <div class="row">
+                <div class="col">
+                    <input type="text" name="productName" class="form-control" placeholder="Enter Product" required />
+                </div>
+                <div class="col">
+                    <input type="number" name="amount" class="form-control" placeholder="Enter Amount" required />
+                </div>
+                <div class="col">
+                    <select name="category" class="form-control">
+                        <option value="">--Select Category--</option>
+                        <option value="FruitsVegetables">Fruits & Vegetables</option>
+                        <option value="Fridge">Fridge items</option>
+                        <option value="Freezer">Freezer items</option>
+                        <option value="Pantry">Pantry items</option>
+                        <option value="Hygiene">Hygiene items</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Add to Shopping List</button>
+        </form>
+
+
 
                 @if(Model.ShoppingLists!= null)
                 {
@@ -91,10 +168,23 @@
                 <p>No Shoppinglist(s) found.</p>
             }
         </div>
-    </div>
-</section>
+}
+
+@* Script for showing form Add New Product *@
+<script>
+    function showAddProductForm() {
+        document.getElementById("addProductForm").style.display = "block";
+    }
+</script>
+
 
 <style>
+    .icon {
+        font-size: 0.75em;
+    }
+
+
+
     .Header {
         margin-bottom: 20px;
     }
@@ -110,16 +200,12 @@
 
     .right-Section {
         width: 35%;
-        background-color: #f5f5f5;
-        border-radius: 10px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .btnAddToShoppingList,
-    .btnNewShoppingList,
-    .btnYourShoppingLists {
+    .btnNewShoppingList {
         background-color: mediumpurple;
         border-radius: 8px;
         margin: 15px;
     }
+
 </style>

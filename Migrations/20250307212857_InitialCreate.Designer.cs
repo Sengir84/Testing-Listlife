@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ListLife.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250307212857_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250307212857_InitialCreateTemp")]
+    partial class InitialCreateTemp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
