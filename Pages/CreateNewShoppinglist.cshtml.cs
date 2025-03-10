@@ -32,7 +32,9 @@ namespace ListLife.Pages
         public string UserListName { get; set; }
 
         [BindProperty]  
-        public Product Product { get; set; }
+        public List<Product> Products { get; set; } = new List<Product>();
+
+        public List<ShoppingList> ShoppingLists { get; set; } = new List<ShoppingList>();
 
 
         public async Task OnGetAsync()
@@ -41,31 +43,42 @@ namespace ListLife.Pages
             if (user != null)
             {
                 UserListName = user.ListName;
+
+                ShoppingLists = await Dbcontext.ShoppingLists
+                    .Include(s => s.Products)
+                    .Where(s => s.UserId == user.Id)
+                    .ToListAsync();
             }
         }
 
-        public async Task<IActionResult> OnPostAsync() 
+        public async Task<IActionResult> OnPostAsync()
         {
             var user = await userManager.GetUserAsync(User);
-
             if (user != null)
             {
-                // Koppla shoppinglistan till användaren och sätt användarens ID
-                ShoppingList.UserId = user.Id;
-                ShoppingList.UserList = user;
+                var newShoppingList = new ShoppingList
+                {
+                    UserId = user.Id,
+                    UserList = user,
+                    Title = ShoppingList.Title ?? "New Shopping List",
+                    Products = new List<Product>()
+                };
 
-                Product.Category ??= "Other";  // Om kategorin �r null, s�tt den till "�vrigt"
-                ShoppingList.Title ??= "New List";  // Om titeln �r null, s�tt den till "Ny lista"
+                Dbcontext.ShoppingLists.Add(newShoppingList);
+                await Dbcontext.SaveChangesAsync(); // Sparar shoppinglistan och får ID
 
-                Product.Category ??= "Other";  // Om kategorin är null, sätt den till "Övrigt"
+                // Lägg till produkter kopplade till shoppinglistan
+                foreach (var product in Products)
+                {
+                    product.ShoppingListId = newShoppingList.Id; // Koppla produkten till rätt lista
+                    Dbcontext.Products.Add(product);
+                }
 
-
-                // Lägg till shoppinglistan i databasen
-                Dbcontext.ShoppingLists.Add(ShoppingList);
-                await Dbcontext.SaveChangesAsync();  // Spara ändringarna i databasen
+                await Dbcontext.SaveChangesAsync(); // Spara produkterna i databasen
             }
 
-            return RedirectToPage("/MyPage");  // Omdirigera till annan sida efter att ha sparat listan
+            return RedirectToPage("/MyPage");
         }
     }
 }
+    
