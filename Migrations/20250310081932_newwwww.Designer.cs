@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ListLife.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250308005826_restoring databases")]
-    partial class restoringdatabases
+    [Migration("20250310081932_newwwww")]
+    partial class newwwww
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,35 @@ namespace ListLife.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ListLife.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShoppingListId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShoppingListId");
+
+                    b.ToTable("Products");
+                });
 
             modelBuilder.Entity("ListLife.Models.SharedList", b =>
                 {
@@ -57,15 +86,7 @@ namespace ListLife.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Product")
-                        .IsRequired()
+                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -287,6 +308,17 @@ namespace ListLife.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ListLife.Models.Product", b =>
+                {
+                    b.HasOne("ListLife.Models.ShoppingList", "ShoppingList")
+                        .WithMany("Products")
+                        .HasForeignKey("ShoppingListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ShoppingList");
+                });
+
             modelBuilder.Entity("ListLife.Models.SharedList", b =>
                 {
                     b.HasOne("ListLife.Models.UserList", "SharedWithUser")
@@ -368,6 +400,8 @@ namespace ListLife.Migrations
 
             modelBuilder.Entity("ListLife.Models.ShoppingList", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("SharedWith");
                 });
 
