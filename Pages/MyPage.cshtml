@@ -141,39 +141,7 @@
         <button type="submit" class="btn btn-primary">Add Product</button>
     </form>
 }
-
-                @* @if(Model.ShoppingLists!= null)
-                {
-                    foreach (var list in Model.ShoppingLists)
-                    {
-                        <div>
-                            <p><Strong>Listname:</strong>@list.Title</p>
-
-                                @if (list.Products != null)
-                                {
-                                    foreach (var product in list.Products)
-                                    {
-                                        <p><Strong>Product:</strong>@product.Name</p>
-                                        <p><Strong>Category:</strong>@product.Category</p>
-                                        <p><Strong>Amount:</strong>@product.Amount</p>
-                                    }
-                                }
-                                else
-                                {
-                                    <p>No products found.</p>
-                                }
-                      
-                        @* functions for sharing shoppinglists *@
-              @*           <form method="post">
-                            <input type="email" asp-for="UserEmail" placeholder="Enter user´s email" required/>
-                            <button type="submit" asp-page-handler="Share" asp-route-listId="@list.Id">Share</button>
-
-                        </form>
-                         
-
-                         </div>
-                    }   
-                }  *@
+              
             <h2>Shared lists</h2>
             @if (Model.SharedShoppingLists != null)
             {
