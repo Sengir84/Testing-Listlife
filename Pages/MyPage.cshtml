@@ -55,12 +55,10 @@
 
 </section>
 
-
-
 @if (Model.EditList != null)
 {
     <h2>Edit Shopping List: @Model.EditList.Title</h2>
-    <form method="post" asp-page-handler="SaveChanges">
+    <form method="post" asp-page-handler="AddProduct"> 
         <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
 
         <div>
@@ -77,56 +75,41 @@
                     <li>No products added yet.</li>
                 }
 
-                <label for="Title">List Title</label>
                 <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
-
-                <div class="row">
-                    <div class="col">
-                        <select asp-for="AddNewProduct.Category" id="Category" name="AddNewProduct.Category" class="form-control">
-                            <option value="">--Select Category--</option>
-                            <option value="FruitsVegetables">Fruits & Vegetables</option>
-                            <option value="Fridge">Fridge items</option>
-                            <option value="Freezer">Freezer items</option>
-                            <option value="Pantry">Pantry items</option>
-                            <option value="Hygiene">Hygiene items</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div class="col">
-                        <input asp-for="AddNewProduct.Name" class="form-control" placeholder="Enter Product" />
-                    </div>
-                    <div class="col">
-                        <input asp-for="AddNewProduct.Amount" class="form-control" placeholder="Enter Amount" />
-                    </div>
-                </div>
             </ul>
 
             <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
-            <button type="submit" class="btn btn-success">Save Changes</button>
             <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
         </div>
     </form>
 
 
-    <h3>Add a New Product</h3>
-    <form method="post" asp-page-handler="AddProduct">
+    
+        <form method="post" asp-page-handler="AddProduct" id="addProductForm" style="display: none;">
         <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
 
+        <h3>Add a New Product</h3>
+
         <label for="ProductName">Product Name:</label>
-        <input type="text" name="newProduct.Name" class="form-control" placeholder="Enter product name" required />
-
+        <input type="text" asp-for="AddNewProduct.Name" class="form-control" placeholder="Enter product name" required />
+    
         <label for="Amount">Amount:</label>
-        <input type="number" name="newProduct.Amount" class="form-control" placeholder="Enter amount" required />
-
+        <input type="number" asp-for="AddNewProduct.Amount" class="form-control" placeholder="Enter amount" required />
+    
         <label for="Category">Category:</label>
-        <select name="newProduct.Category" class="form-control">
+        <select asp-for="AddNewProduct.Category" id="Category" name="AddNewProduct.Category" class="form-control" required>
+            <option value="">--Select Category--</option>
             <option value="FruitsVegetables">Fruits & Vegetables</option>
             <option value="Fridge">Fridge items</option>
+            <option value="Freezer">Freezer items</option>
+            <option value="Pantry">Pantry items</option>
+            <option value="Hygiene">Hygiene items</option>
             <option value="Other">Other</option>
         </select>
 
-        <button type="submit" class="btn btn-primary">Add Product</button>
+        <button type="submit" class="btn btn-primary">Add to Shoppinglist</button>
     </form>
+
 }
 
                 @if(Model.ShoppingLists!= null)
@@ -192,18 +175,22 @@
 
 @* Script for showing form Add New Product *@
 <script>
-    function showAddProductForm() {
+@*     function showAddProductForm() {
         document.getElementById("addProductForm").style.display = "block";
-    }
+    } *@
+
+    function showAddProductForm() {
+    var form = document.getElementById("addProductForm");
+    form.style.display = "block"; // Gör formuläret synligt
+}
 </script>
+
 
 
 <style>
     .icon {
         font-size: 0.75em;
     }
-
-
 
     .Header {
         margin-bottom: 20px;
