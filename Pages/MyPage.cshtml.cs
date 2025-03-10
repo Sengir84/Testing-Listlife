@@ -52,7 +52,7 @@ namespace ListLife.Pages
             if (user != null)
             {
 
-                ////Get user's shopping lists
+                //Get user's shopping lists
                 ShoppingLists = await _context.ShoppingLists.Where(u => u.UserId == user.Id).ToListAsync();
 
                 // Get user's shopping lists and include related products
@@ -70,30 +70,28 @@ namespace ListLife.Pages
             }
         }
 
-        // Hämta ShoppingId baserat på Id
+        // Hämta ShoppingId baserat på Id samt tillhörande produkter
         public async Task<IActionResult> OnGetEditAsync(int? id)
         {
             if (id == null)
             {
-                // Return a 404 if the id is not provided or invalid
                 return NotFound();
             }
 
-            // Fetch the shopping list by id
-            EditList = await _context.ShoppingLists
-                .Include(sl => sl.Products) // Include the related products
-                .FirstOrDefaultAsync(sl => sl.Id == id);
+            if (EditList != null)
+            {
+                EditList.Products = await _context.Products
+                    .Where(p => p.ShoppingListId == EditList.Id)
+                    .ToListAsync();
+            }
 
             if (EditList == null)
             {
-                // Return a 404 if the shopping list is not found
                 return NotFound();
             }
 
-            // If the shopping list is found, return the page with the shopping list
             return Page();
         }
-
 
 
         public async Task<IActionResult> OnPostCreateAsync()
@@ -214,20 +212,14 @@ namespace ListLife.Pages
                 ShoppingListId = shoppingListId
             };
 
-            // Lägg till produkten i databasen
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
 
-            // Uppdatera shoppinglistan med den nya produkten
-            EditList = shoppingList; // Uppdatera EditList så att den återspeglar de senaste förändringarna
-            EditList.Products.Add(newProduct); // Lägg till den nya produkten i listan
 
-            return Page(); // Skicka tillbaka samma sida så att den renderas med den nya produkten
+            EditList = shoppingList; 
+
+            return Page(); 
         }
-
-
-
-
 
     }
 }
