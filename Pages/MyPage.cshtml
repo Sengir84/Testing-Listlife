@@ -128,33 +128,51 @@
     </form>
 
 }
-              
-            <h2>Shared lists</h2>
-            @if (Model.SharedShoppingLists != null)
-            {
-                foreach (var list in Model.SharedShoppingLists)
-                {
-                    <p><Strong>Shared list:</strong>@list.Title</p>
 
-                    @if(list.Products != null)
-                    {
-                        foreach (var product in list.Products)
-                        {
-                            <p><Strong>Product:</strong>@product.Name</p>
-                            <p><Strong>Category:</strong>@product.Category</p>
-                            <p><Strong>Amount:</strong>@product.Amount</p>
-                        }
-                    }
-                    else
-                    {
-                        <p>No products found.</p>
-                    }
-                }
-            }
-            else 
-            {
-                <p>No Shoppinglist(s) found.</p>
-            }
+<h2>Shared lists</h2>
+@if (Model.SharedShoppingLists != null && Model.SharedShoppingLists.Any())
+{
+    <ul>
+        @foreach (var list in Model.SharedShoppingLists)
+        {
+            <li>
+                <strong onclick="showListDetails('@list.Id', true)">@list.Title</strong>
+
+                <!--Delete Button-->
+                <form method="post" asp-page-handler="Delete" style="display:inline;">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <button type="submit" class="btn btn-danger" title="Delete" style="padding: 4px 8px; font-size: 75%;">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+                <!--Edit Button-->
+                <form method="post" asp-page-handler="Edit" style="display:inline;">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </form>
+                <!--Share Button-->
+                <form method="post" asp-page-handler="Share" style="display:inline;" onsubmit="return toggleShareInput('@list.Id');">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <button type="submit" class="btn btn-success small-btn" title="Share" style="padding: 4px 8px; font-size: 75%;">
+                        <i class="bi bi-share"></i>
+                    </button>
+                </form>
+                <!-- Hidden Email Input Field -->
+                <form method="post" asp-page-handler="Share" id="emailForm-@list.Id" style="display:none; margin-top: 5px;">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <input type="email" name="UserEmail" placeholder="Enter user’s email" required />
+                    <button type="submit" class="btn btn-success small-btn">Send</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No Shoppinglist(s) found.</p>
+}
 
 
 
@@ -182,29 +200,31 @@
         return false; // Prevents form submission
     }
 </script>
-
+@* script for showing list details for both your own lists and shared lists*@
 <script>
-function showListDetails(listId) {
-    fetch(`/MyPage?handler=ListDetails&id=${listId}`)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result); // Log the fetched data
-            if (result.success) {
-                const listDetails = result.data;
-                const listDetailsDiv = document.getElementById('listDetails');
-                listDetailsDiv.innerHTML = `
-                    <h2>${listDetails.title}</h2>
-                    <ul>
-                        ${listDetails.products.map(product => `<li>${product.name} - ${product.amount} ${product.category}</li>`).join('')}
-                    </ul>
-                `;
-            } else {
-                console.error('Error:', result.message);
-            }
-        })
-        .catch(error => console.error('Error fetching list details:', error));
-}
+    function showListDetails(listId, isShared = false) {
+        const handler = isShared ? 'SharedListDetails' : 'ListDetails';
+        fetch(`/MyPage?handler=${handler}&id=${listId}`)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result); // Log the fetched data
+                if (result.success) {
+                    const listDetails = result.data;
+                    const listDetailsDiv = document.getElementById('listDetails');
+                    listDetailsDiv.innerHTML = `
+                        <h2>${listDetails.title}</h2>
+                        <ul>
+                            ${listDetails.products.map(product => `<li>${product.name} - ${product.amount} ${product.category}</li>`).join('')}
+                        </ul>
+                    `;
+                } else {
+                    console.error('Error:', result.message);
+                }
+            })
+            .catch(error => console.error('Error fetching list details:', error));
+    }
 </script>
+
 <style>
     .icon {
         font-size: 0.75em;

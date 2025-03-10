@@ -209,6 +209,36 @@ namespace ListLife.Pages
             return new JsonResult(new { success = true, data = listDetails });
         }
 
+        public async Task<JsonResult> OnGetSharedListDetailsAsync(int id)
+        {
+            var sharedList = await _context.SharedLists
+                .Include(sl => sl.ShoppingList)
+                .ThenInclude(sl => sl.Products)
+                .FirstOrDefaultAsync(sl => sl.ShoppingListId == id);
+
+            if (sharedList == null)
+            {
+                return new JsonResult(new { success = false, message = "Shared list not found" });
+            }
+
+            var listDetails = new
+            {
+                Title = sharedList.ShoppingList.Title,
+                Products = sharedList.ShoppingList.Products.Select(p => new
+                {
+                    p.Name,
+                    p.Amount,
+                    p.Category
+                })
+            };
+
+            return new JsonResult(new
+            {
+                success = true,
+                data = listDetails
+            });
+        }
+
         public async Task<IActionResult> OnPostEditAsync(int listId)
         {
             // Hämtar listan som ska redigeras
