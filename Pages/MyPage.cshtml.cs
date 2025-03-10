@@ -184,6 +184,30 @@ namespace ListLife.Pages
 
             return RedirectToPage(); 
         }
+        public async Task<JsonResult> OnGetListDetailsAsync(int id)
+        {
+            var shoppingList = await _context.ShoppingLists
+                .Include(sl => sl.Products)
+                .FirstOrDefaultAsync(sl => sl.Id == id);
+
+            if (shoppingList == null)
+            {
+                return new JsonResult(new { success = false, message = "List not found" });
+            }
+
+            var listDetails = new
+            {
+                Title = shoppingList.Title,
+                Products = shoppingList.Products.Select(p => new
+                {
+                    p.Name,
+                    p.Amount,
+                    p.Category
+                })
+            };
+
+            return new JsonResult(new { success = true, data = listDetails });
+        }
 
         public async Task<IActionResult> OnPostEditAsync(int listId)
         {
