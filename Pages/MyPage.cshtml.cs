@@ -78,10 +78,20 @@ namespace ListLife.Pages
                 return NotFound();
             }
 
-            if (EditList != null)
+            // Get user
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
             {
-                EditList.Products = await _context.Products
-                    .Where(p => p.ShoppingListId == EditList.Id)
+                //Get user's shopping lists
+                ShoppingLists = await _context.ShoppingLists.Where(u => u.UserId == user.Id).ToListAsync();
+            }
+
+                if (EditList != null)
+            {
+                // Get user's shopping lists and include related products
+                ShoppingLists = await _context.ShoppingLists
+                    .Where(u => u.UserId == user.Id)
+                    .Include(sl => sl.Products)  // Inkludera produkter
                     .ToListAsync();
             }
 
