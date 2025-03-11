@@ -75,45 +75,40 @@
 @if (Model.EditList != null)
 {
     <h2>Edit Shopping List: @Model.EditList.Title</h2>
-    <form method="post" asp-page="/MyPage" asp-page-handler="AddProduct"> 
-        <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
 
-        <div>
-            <ul>
-                @if (Model.EditList.Products != null) // Kolla om det finns produkter
-                {
-                    foreach (var product in Model.EditList.Products) // Loopa genom produkterna
-                    {
-                        <li>
-                            @product.Name - @product.Amount @product.Category
+    <!-- Lista alla produkter i shoppinglistan -->
+    <ul>
+        @if (Model.EditList.Products != null && Model.EditList.Products.Count > 0)
+        {
+            foreach (var product in Model.EditList.Products)
+            {
+                <li>
+                    @product.Name - @product.Amount @product.Category
 
-                            <form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.Id" style="display:inline;">
-                                <input type="hidden" name="productId" value="@product.Id" />
-                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 75%;">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                    <!-- Formulär för att ta bort en produkt -->
+                    <form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.Id" style="display:inline;">
+                        <input type="hidden" name="productId" value="@product.Id" />
+                        <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 75%;">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
 
-                            <form method="post" asp-page="/MyPage" asp-page-handler="EditProduct" style="display:inline;">
-                                <input type="hidden" name="productId" value="@product.Id" />
-                                <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                            </form>
-                        </li>
-                    }
-                }
-                else
-{
-                        <li>No products added yet.</li>
-}         
-            </ul>
-
+                    <!-- Formulär för att redigera en produkt -->
+@*                     <form method="post" asp-page-handler="EditProduct" asp-route-productId="@product.Id" style="display:inline;">
+                        <button type="button" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;" onclick="showEditProductForm(@product.Id)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </form> *@
+                </li>
+            }
+        }
+        else
+        {
+            <li>No products added yet.</li>
+        }
+    </ul>
             <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
             <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Back</button>
-        </div>
-    </form>
-
 
     // Lägger till ny produkt i befintlig lista
         <form method="post" asp-page-handler="AddProduct" id="addProductForm" style="display: none;">
@@ -141,6 +136,32 @@
         <button type="submit" class="btn btn-primary">Add to Shoppinglist</button>
     </form>
 
+@*     // Editera produkt i befintlig lista
+    <form method="post" asp-page-handler="EditProduct" id="editProductForm" style="display: none;">
+        <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
+        <input type="hidden" name="productId" id="productId" />
+
+        <h3>Edit Product</h3>
+
+        <label for="ProductName">Product Name:</label>
+        <input type="text" id="productName" name="AddNewProduct.Name" class="form-control" placeholder="Enter product name" required />
+
+        <label for="Amount">Amount:</label>
+        <input type="number" id="productAmount" name="AddNewProduct.Amount" class="form-control" placeholder="Enter amount" required />
+
+        <label for="Category">Category:</label>
+        <select id="productCategory" name="AddNewProduct.Category" class="form-control">
+            <option value="FruitsVegetables">Fruits & Vegetables</option>
+            <option value="Fridge">Fridge items</option>
+            <option value="Freezer">Freezer items</option>
+            <option value="Pantry">Pantry items</option>
+            <option value="Hygiene">Hygiene items</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
+    </form> *@
 }
 
 <h2>Shared lists</h2>
@@ -189,15 +210,23 @@ else
 }
 
 
-
 @* Script for showing form Add New Product *@
 <script>
 
     function showAddProductForm() {
     var form = document.getElementById("addProductForm");
-    form.style.display = "block"; // Gör formuläret synligt
+    form.style.display = "block";
 }
 </script>
+
+
+@* <script>
+        function showEditProductForm() {
+        var form = document.getElementById("editProductForm");
+        form.style.display = "block";
+    }
+</script> *@
+
 @* Script showing email input for sharing shoppinglists *@
 <script>
     function toggleShareInput(listId) {
