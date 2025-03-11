@@ -36,6 +36,9 @@ namespace ListLife.Pages
 
         public List<ShoppingList> ShoppingLists { get; set; } = new List<ShoppingList>();
 
+        public List<Product> RecentlyPurchasedProducts { get; set; } = new List<Product>();
+
+
 
         public async Task OnGetAsync()
         {
@@ -47,6 +50,13 @@ namespace ListLife.Pages
                 ShoppingLists = await Dbcontext.ShoppingLists
                     .Include(s => s.Products)
                     .Where(s => s.UserId == user.Id)
+                    .ToListAsync();
+
+                // Hämta nyligen köpta produkter (senaste 10 produkterna från tidigare shoppinglistor)
+                RecentlyPurchasedProducts = await Dbcontext.Products
+                    .Where(p => p.ShoppingList.UserId == user.Id)
+                    .OrderByDescending(p => p.Id) // Senaste först
+                    .Take(10)
                     .ToListAsync();
             }
         }
