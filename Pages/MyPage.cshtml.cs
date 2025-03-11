@@ -280,6 +280,10 @@ namespace ListLife.Pages
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
 
+            // Reset the model
+            ModelState.Clear(); // Ensures Razor Page doesn't remember old values
+            AddNewProduct = new Product();
+
             EditList = shoppingList;
 
             return Page();

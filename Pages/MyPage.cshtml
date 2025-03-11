@@ -139,6 +139,17 @@
         </select>
 
         <button type="submit" class="btn btn-primary">Add to Shoppinglist</button>
+
+        <script>
+            document.getElementById("addProductForm").addEventListener("submit", function () {
+                setTimeout(() => {
+                    document.getElementById("ProductName").value = "";
+                    document.getElementById("Amount").value = "";
+                    document.getElementById("Category").value = "";
+                }, 100); // Slight delay to allow post request
+            });
+        </script>
+
     </form>
 
 }
