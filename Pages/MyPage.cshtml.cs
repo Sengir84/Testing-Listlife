@@ -285,31 +285,25 @@ namespace ListLife.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostEditProductAsync(int productId)
-        {
-            // Hämta produkt från databasen baserat på produktens ID
-            var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.Id == productId);
+        //public async Task<IActionResult> OnPostEditProductAsync()
+        //{
+        //    var product = await _context.Products.FindAsync(AddNewProduct.Id);  
 
-            if (product == null)
-            {
-                // Om produkten inte hittas, returnera ett 404-fel
-                return NotFound();
-            }
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            // Uppdatera produktens egenskaper med de nya värdena från AddNewProduct
-            product.Name = AddNewProduct.Name;
-            product.Amount = AddNewProduct.Amount;
-            product.Category = AddNewProduct.Category;
+        //    // Uppdatera produktens egenskaper
+        //    product.Name = AddNewProduct.Name;
+        //    product.Amount = AddNewProduct.Amount;
+        //    product.Category = AddNewProduct.Category;
 
-            // Markera produkten som uppdaterad och spara ändringarna
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
+        //    await _context.SaveChangesAsync();
 
-            // Återgå till samma sida (eller en annan sida beroende på din design)
-            return RedirectToPage();
-        }
-
+        //    // Återgå till samma sida eller en annan sida efter att ha sparat ändringarna
+        //    return RedirectToPage("/MyPage", new { id = product.ShoppingListId });
+        //}
 
         public async Task<IActionResult> OnPostDeleteProductAsync(int productId)
         {
