@@ -66,7 +66,21 @@
         <h2>Your Shopping List:<span id="listTitleDisplay"></span></h2>
         <ul id="shoppingList"></ul>
     </section>
-
+    <!-- Recently Purchased - Rullista vid sidan -->
+    <section class="recently-purchased">
+        <h3>Recently Purchased</h3>
+        <ul id="recentlyPurchasedList">
+            @foreach (var product in Model.RecentlyPurchasedProducts)
+            {
+                <li class="recently-purchased-item" draggable="true"
+                    data-category="@product.Category"
+                    data-name="@product.Name"
+                    data-amount="@product.Amount">
+                    <strong>@product.Category:</strong> @product.Name (@product.Amount)
+                </li>
+            }
+        </ul>
+    </section>
 
 </section>
 
@@ -154,6 +168,45 @@
             `;
         });
     }
+
+        // Gör Recently Purchased-produkter draggable
+    document.querySelectorAll(".recently-purchased-item").forEach(item => {
+        item.addEventListener("dragstart", function (event) {
+            event.dataTransfer.setData("category", this.getAttribute("data-category"));
+            event.dataTransfer.setData("name", this.getAttribute("data-name"));
+            event.dataTransfer.setData("amount", this.getAttribute("data-amount"));
+        });
+    });
+
+    // Gör shoppinglistan till en droppbar yta
+    let shoppingListEl = document.getElementById("shoppingList");
+
+    shoppingListEl.addEventListener("dragover", function (event) {
+        event.preventDefault(); // Tillåter drop
+    });
+
+    shoppingListEl.addEventListener("drop", function (event) {
+        event.preventDefault();
+
+        // Hämta information om produkten
+        let category = event.dataTransfer.getData("category");
+        let name = event.dataTransfer.getData("name");
+        let amount = event.dataTransfer.getData("amount");
+
+        if (!category || !name || !amount) return; // Förhindra tomma värden
+
+        // Lägg till produkten i shoppinglistan
+        let newItem = {
+            Category: category,
+            Name: name,
+            Amount: amount
+        };
+
+        shoppingList.push(newItem);
+        updateShoppingListUI();
+        updateProductFields();
+    });
+
 </script>
 
 <style>
@@ -186,6 +239,45 @@
         word-wrap: break-word;
     }
 
+        .shopping-list h2 {
+            font-size: 18px; 
+            text-align: center;
+            line-height: 1.2;
+            white-space: normal; 
+            word-wrap: break-word; 
+            overflow: hidden;
+            max-width: 100%; 
+            padding: 5px; 
+        }
+
+    /* 🔹 Justerar varje produkt i shoppinglistan */
+    .shopping-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Gör så att texten och knappen hamnar rätt */
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    /* 🔹 Justerar textens placering */
+    .list-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Alla produkter på vänster sida */
+        width: 100%;
+    }
+
+    /* 🔹 Justerar produkttextens placering */
+    .item-text {
+        font-size: 14px;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+    }
+
+
+
     .button-group {
         display: flex;
         justify-content: space-between;
@@ -200,21 +292,7 @@
         border-bottom: 1px solid #ccc;
     }
 
-    .list-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-
-    .item-text {
-        font-size: 14px;
-        flex-grow: 1;
-        word-wrap: break-word;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+   
 
     .remove-item {
         background-color: red;
@@ -224,4 +302,55 @@
         border-radius: 5px;
         cursor: pointer;
     }
+ 
+
+    /* 🔹  Recently Purchased-stil */
+    .recently-purchased {
+        width: 180px; /* Gör listan smalare */
+        background-color: #2a2a2a;
+        padding: 8px;
+        border-radius: 8px;
+        overflow-y: auto;
+        max-height: 280px;
+        font-size: 13px;
+        color: white;
+        border: 1px solid #444; /* Mild kantlinje */
+    }
+
+        /* 🔹 Justera titelstorlek */
+        .recently-purchased h3 {
+            margin: 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+    /* 🔹 Enskilda produktboxar */
+    .recently-purchased-item {
+        padding: 6px;
+        background-color: #3b3b3b;
+        border-radius: 5px;
+        cursor: grab;
+        margin-bottom: 4px;
+        transition: background-color 0.2s;
+    }
+
+        .recently-purchased-item:hover {
+            background-color: #555;
+        }
+
+    /* 🔹 Justera layouten för bättre avstånd */
+    .shopping-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 900px;
+        margin: auto;
+        gap: 20px; /* Skapar mer luft mellan sektionerna */
+    }
+
+    /* 🔹 Ser till att shoppinglistan och Recently Purchased har samma höjd */
+    .shopping-list, .recently-purchased {
+        flex: 1;
+        min-height: 280px;
+    }
+
 </style>
