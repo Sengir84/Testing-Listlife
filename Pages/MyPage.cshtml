@@ -63,41 +63,55 @@
 
         <div>
             <ul>
-                @if (Model.EditList.Products != null && Model.EditList.Products.Any()) // Kolla om det finns produkter
+                @if (Model.EditList.Products != null) // Kolla om det finns produkter
                 {
                     foreach (var product in Model.EditList.Products) // Loopa genom produkterna
                     {
-                        <li>@product.Name - @product.Amount @product.Category</li>
+                        <li>
+                            @product.Name - @product.Amount @product.Category
+
+                            <form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.Id" style="display:inline;">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+
+                            <form method="post" asp-page-handler="EditProduct" style="display:inline;">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </form>
+                        </li>
                     }
                 }
                 else
-                {
-                    <li>No products added yet.</li>
-                }
-
-                <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
+{
+                        <li>No products added yet.</li>
+}         
             </ul>
 
             <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
-            <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
+            <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Back</button>
         </div>
     </form>
 
 
-    
+    // Lägger till ny produkt i befintlig lista
         <form method="post" asp-page-handler="AddProduct" id="addProductForm" style="display: none;">
         <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
 
         <h3>Add a New Product</h3>
 
         <label for="ProductName">Product Name:</label>
-        <input type="text" asp-for="AddNewProduct.Name" class="form-control" placeholder="Enter product name" required />
+        <input type="text" asp-for="AddNewProduct.Name" class="form-control" placeholder="Enter product name"/>
     
         <label for="Amount">Amount:</label>
-        <input type="number" asp-for="AddNewProduct.Amount" class="form-control" placeholder="Enter amount" required />
+        <input type="number" asp-for="AddNewProduct.Amount" class="form-control" placeholder="Enter amount"/>
     
         <label for="Category">Category:</label>
-        <select asp-for="AddNewProduct.Category" id="Category" name="AddNewProduct.Category" class="form-control" required>
+        <select asp-for="AddNewProduct.Category" id="Category" name="AddNewProduct.Category" class="form-control">
             <option value="">--Select Category--</option>
             <option value="FruitsVegetables">Fruits & Vegetables</option>
             <option value="Fridge">Fridge items</option>
@@ -175,9 +189,6 @@
 
 @* Script for showing form Add New Product *@
 <script>
-@*     function showAddProductForm() {
-        document.getElementById("addProductForm").style.display = "block";
-    } *@
 
     function showAddProductForm() {
     var form = document.getElementById("addProductForm");
