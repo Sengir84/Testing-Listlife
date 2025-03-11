@@ -75,7 +75,7 @@
 @if (Model.EditList != null)
 {
     <h2>Edit Shopping List: @Model.EditList.Title</h2>
-    <form method="post" asp-page-handler="AddProduct"> 
+    <form method="post" asp-page="/MyPage" asp-page-handler="AddProduct"> 
         <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
 
         <div>
