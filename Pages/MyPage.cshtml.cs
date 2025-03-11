@@ -289,23 +289,24 @@ namespace ListLife.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostEditProductAsync(int productId)
+        public async Task<IActionResult> OnPostEditProductAsync()
         {
-            // hämta produkten baserat på produktens ID
-            var product = await _context.Products
-                .Include(p => p.ShoppingList)
-                .FirstOrDefaultAsync(p => p.Id == productId);
+            var product = await _context.Products.FindAsync(AddNewProduct.Id);
 
-            if (product != null)
+            if (product == null)
             {
-                // Hämta den shoppinglistan produkten tillhör
-                var shoppingList = product.ShoppingList;
-
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
 
-            return Page();
+            // Uppdatera produktens egenskaper
+            product.Name = AddNewProduct.Name;
+            product.Amount = AddNewProduct.Amount;
+            product.Category = AddNewProduct.Category;
+
+            await _context.SaveChangesAsync();
+
+            // Återgå till samma sida eller en annan sida efter att ha sparat ändringarna
+            return RedirectToPage("/MyPage", new { id = product.ShoppingListId });
         }
 
         public async Task<IActionResult> OnPostDeleteProductAsync(int productId)
