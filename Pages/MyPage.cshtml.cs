@@ -287,22 +287,29 @@ namespace ListLife.Pages
 
         public async Task<IActionResult> OnPostEditProductAsync(int productId)
         {
-            // hämta produkten baserat på produktens ID
+            // Hämta produkt från databasen baserat på produktens ID
             var product = await _context.Products
-                .Include(p => p.ShoppingList)
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
-            if (product != null)
+            if (product == null)
             {
-                // Hämta den shoppinglistan produkten tillhör
-                var shoppingList = product.ShoppingList;
-
-                _context.Products.Update(product);
-                await _context.SaveChangesAsync();
+                // Om produkten inte hittas, returnera ett 404-fel
+                return NotFound();
             }
 
-            return Page();
+            // Uppdatera produktens egenskaper med de nya värdena från AddNewProduct
+            product.Name = AddNewProduct.Name;
+            product.Amount = AddNewProduct.Amount;
+            product.Category = AddNewProduct.Category;
+
+            // Markera produkten som uppdaterad och spara ändringarna
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+
+            // Återgå till samma sida (eller en annan sida beroende på din design)
+            return RedirectToPage();
         }
+
 
         public async Task<IActionResult> OnPostDeleteProductAsync(int productId)
         {
