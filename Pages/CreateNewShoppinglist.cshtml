@@ -18,9 +18,8 @@
                 </div>
 
                 <div>
-
                     <label>Category:</label>
-                    <select name="ShoppingList.Category" id="category" class="form-control" required>
+                    <select id="category" class="form-control" required>
                         <option value="">--Select Category--</option>
                         <option value="FruitsVegetables">Fruits & Vegetables</option>
                         <option value="Fridge">Fridge items</option>
@@ -28,19 +27,22 @@
                         <option value="Pantry">Pantry items</option>
                         <option value="Hygiene">Hygiene items</option>
                         <option value="Other">Other</option>
-                        <option value="Amount">Amount</option>
                     </select>
                 </div>
 
                 <div>
-                    <label asp-for="Product.Name">Product Name:</label>
-                    <input asp-for="Product.Name" id="product" class="form-control" placeholder="Enter product name" required />
+                    <label>Product Name:</label>
+                    <input id="product" class="form-control" placeholder="Enter product name" required />
                 </div>
 
                 <div>
-                    <label asp-for="Product.Amount">Amount:</label>
-                    <select id="amount" class="form-control" required></select>
+                    <label>Amount:</label>
+                    <input type="number" id="amount" class="form-control" min="1" step="1" required />
                 </div>
+
+                <!-- Lista för att skicka produkter till backend -->
+                <div id="productListContainer"></div>
+
             </fieldset>
 
             <nav class="button-group">
@@ -64,6 +66,22 @@
         <h2>Your Shopping List:<span id="listTitleDisplay"></span></h2>
         <ul id="shoppingList"></ul>
     </section>
+    <!-- Recently Purchased - Rullista vid sidan -->
+    <section class="recently-purchased">
+        <h3>Recently Purchased</h3>
+        <ul id="recentlyPurchasedList">
+            @foreach (var product in Model.RecentlyPurchasedProducts)
+            {
+                <li class="recently-purchased-item" draggable="true"
+                    data-category="@product.Category"
+                    data-name="@product.Name"
+                    data-amount="@product.Amount">
+                    <strong>@product.Category:</strong> @product.Name (@product.Amount)
+                </li>
+            }
+        </ul>
+    </section>
+
 </section>
 
 <script>
@@ -72,19 +90,15 @@
     // Uppdaterar mängd beroende på kategori
     document.getElementById("category").addEventListener("change", function () {
         let category = this.value;
-        let amountSelect = document.getElementById("amount");
-        amountSelect.innerHTML = "";
+        let amountField = document.getElementById("amount");
 
+        // Om kategori är Fruits & Vegetables, sätt mängd i kg, annars styck
         if (category === "FruitsVegetables") {
-            ["0.5 kg", "1 kg", "1.5 kg", "2 kg"].forEach(value => {
-                let option = new Option(value, value);
-                amountSelect.appendChild(option);
-            });
+            amountField.step = "0.5";
+            amountField.placeholder = "Enter weight (kg)";
         } else {
-            for (let i = 1; i <= 10; i++) {
-                let option = new Option(i, i);
-                amountSelect.appendChild(option);
-            }
+            amountField.step = "1";
+            amountField.placeholder = "Enter quantity";
         }
     });
 
@@ -99,15 +113,20 @@
             return;
         }
 
-        // Sätt listans namn i realtidsrutan 
+        // Sätt listans namn i realtidsrutan
         if (shoppingList.length === 0 && listTitle !== "") {
             document.getElementById("listTitleDisplay").textContent = " " + listTitle;
         }
 
-        let newItem = { category, product, amount };
-        shoppingList.push(newItem);
+        let newItem = {
+            Category: category,
+            Name: product,
+            Amount: amount
+        };
 
+        shoppingList.push(newItem);
         updateShoppingListUI();
+        updateProductFields(); // Uppdatera hidden fields så de skickas till backend
     });
 
     function updateShoppingListUI() {
@@ -119,7 +138,7 @@
             li.classList.add("shopping-list-item");
             li.innerHTML = `
                 <div class="list-item">
-                    <span class="item-text"><strong>${item.category}:</strong> ${item.product} (${item.amount})</span>
+                    <span class="item-text"><strong>${item.Category}:</strong> ${item.Name} (${item.Amount})</span>
                     <button class="btn btn-sm btn-danger remove-item" data-index="${index}">
                         <i class="bi bi-trash"></i>
                     </button>
@@ -132,9 +151,62 @@
                 let index = this.getAttribute("data-index");
                 shoppingList.splice(index, 1);
                 updateShoppingListUI();
+                updateProductFields(); // Uppdatera fälten när en produkt tas bort
             });
         });
     }
+
+    function updateProductFields() {
+        let productListContainer = document.getElementById("productListContainer");
+        productListContainer.innerHTML = ""; // Rensa fält
+
+        shoppingList.forEach((item, index) => {
+            productListContainer.innerHTML += `
+                <input type="hidden" name="Products[${index}].Category" value="${item.Category}" />
+                <input type="hidden" name="Products[${index}].Name" value="${item.Name}" />
+                <input type="hidden" name="Products[${index}].Amount" value="${item.Amount}" />
+            `;
+        });
+    }
+
+        // Gör Recently Purchased-produkter draggable
+    document.querySelectorAll(".recently-purchased-item").forEach(item => {
+        item.addEventListener("dragstart", function (event) {
+            event.dataTransfer.setData("category", this.getAttribute("data-category"));
+            event.dataTransfer.setData("name", this.getAttribute("data-name"));
+            event.dataTransfer.setData("amount", this.getAttribute("data-amount"));
+        });
+    });
+
+    // Gör shoppinglistan till en droppbar yta
+    let shoppingListEl = document.getElementById("shoppingList");
+
+    shoppingListEl.addEventListener("dragover", function (event) {
+        event.preventDefault(); // Tillåter drop
+    });
+
+    shoppingListEl.addEventListener("drop", function (event) {
+        event.preventDefault();
+
+        // Hämta information om produkten
+        let category = event.dataTransfer.getData("category");
+        let name = event.dataTransfer.getData("name");
+        let amount = event.dataTransfer.getData("amount");
+
+        if (!category || !name || !amount) return; // Förhindra tomma värden
+
+        // Lägg till produkten i shoppinglistan
+        let newItem = {
+            Category: category,
+            Name: name,
+            Amount: amount
+        };
+
+        shoppingList.push(newItem);
+        updateShoppingListUI();
+        updateProductFields();
+    });
+
 </script>
 
 <style>
@@ -167,6 +239,45 @@
         word-wrap: break-word;
     }
 
+        .shopping-list h2 {
+            font-size: 18px; 
+            text-align: center;
+            line-height: 1.2;
+            white-space: normal; 
+            word-wrap: break-word; 
+            overflow: hidden;
+            max-width: 100%; 
+            padding: 5px; 
+        }
+
+    /* 🔹 Justerar varje produkt i shoppinglistan */
+    .shopping-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Gör så att texten och knappen hamnar rätt */
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    /* 🔹 Justerar textens placering */
+    .list-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Alla produkter på vänster sida */
+        width: 100%;
+    }
+
+    /* 🔹 Justerar produkttextens placering */
+    .item-text {
+        font-size: 14px;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+    }
+
+
+
     .button-group {
         display: flex;
         justify-content: space-between;
@@ -181,21 +292,7 @@
         border-bottom: 1px solid #ccc;
     }
 
-    .list-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 5px;
-    }
-
-    .item-text {
-        font-size: 14px;
-        flex-grow: 1;
-        word-wrap: break-word;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+   
 
     .remove-item {
         background-color: red;
@@ -205,4 +302,55 @@
         border-radius: 5px;
         cursor: pointer;
     }
+ 
+
+    /* 🔹  Recently Purchased-stil */
+    .recently-purchased {
+        width: 180px; /* Gör listan smalare */
+        background-color: #2a2a2a;
+        padding: 8px;
+        border-radius: 8px;
+        overflow-y: auto;
+        max-height: 280px;
+        font-size: 13px;
+        color: white;
+        border: 1px solid #444; /* Mild kantlinje */
+    }
+
+        /* 🔹 Justera titelstorlek */
+        .recently-purchased h3 {
+            margin: 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+    /* 🔹 Enskilda produktboxar */
+    .recently-purchased-item {
+        padding: 6px;
+        background-color: #3b3b3b;
+        border-radius: 5px;
+        cursor: grab;
+        margin-bottom: 4px;
+        transition: background-color 0.2s;
+    }
+
+        .recently-purchased-item:hover {
+            background-color: #555;
+        }
+
+    /* 🔹 Justera layouten för bättre avstånd */
+    .shopping-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 900px;
+        margin: auto;
+        gap: 20px; /* Skapar mer luft mellan sektionerna */
+    }
+
+    /* 🔹 Ser till att shoppinglistan och Recently Purchased har samma höjd */
+    .shopping-list, .recently-purchased {
+        flex: 1;
+        min-height: 280px;
+    }
+
 </style>
