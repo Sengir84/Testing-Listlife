@@ -12,7 +12,7 @@
 <h1 class="Header">Welcome to MyPage</h1>
 
 <section class="container">
-    <div class="right-Section">
+    <div class="left-Section">
     
         <h2>Your Shoppinglists:</h2>
             <div>
@@ -23,20 +23,33 @@
                 @foreach (var list in Model.ShoppingLists)
                 {
                     <li>
-                        <strong>@list.Title</strong>
-
+                        <strong onclick="showListDetails('@list.Id')">@list.Title</strong>
+                            <!--Delete Button-->
                             <form method="post" asp-page-handler="Delete" style="display:inline;">
                                 <input type="hidden" name="listId" value="@list.Id" />
                                 <button type="submit" class="btn btn-danger" title="Delete" style="padding: 4px 8px; font-size: 75%;">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
-
+                            <!--Edit Button-->
                             <form method="post" asp-page-handler="Edit" style="display:inline;">
                                 <input type="hidden" name="listId" value="@list.Id" />
                                 <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
                                     <i class="bi bi-pencil"></i>
                                 </button>
+                            </form>
+                            <!--Share Button-->
+                            <form method="post" asp-page-handler="Share" style="display:inline;" onsubmit="return toggleShareInput('@list.Id');">
+                                <input type="hidden" name="listId" value="@list.Id" />
+                                <button type="submit" class="btn btn-success small-btn" title="Share" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-share"></i>
+                                </button>
+                            </form>
+                            <!-- Hidden Email Input Field -->
+                            <form method="post" asp-page-handler="Share" id="emailForm-@list.Id" style="display:none; margin-top: 5px;">
+                            <input type="hidden" name="listId" value="@list.Id" />
+                            <input type="email" name="UserEmail" placeholder="Enter user’s email" required />
+                            <button type="submit" class="btn btn-success small-btn">Send</button>
                             </form>
                     </li>
                 }
@@ -46,7 +59,11 @@
     </div>
           
 
-    <div class="left-Section">
+    <div class="right-Section">
+
+        <div class="right-Section" id="listDetails">
+    <!-- The selected list details will be displayed here -->
+</div>
 
         <form asp-page="/CreateNewShoppingList" method="get">
             <button type="submit" class="btnNewShoppingList">Create new Shoppinglist</button>
@@ -58,46 +75,60 @@
 @if (Model.EditList != null)
 {
     <h2>Edit Shopping List: @Model.EditList.Title</h2>
-    <form method="post" asp-page-handler="AddProduct"> 
+    <form method="post" asp-page="/MyPage" asp-page-handler="AddProduct"> 
         <input type="hidden" asp-for="EditList.Id" value="@Model.EditList.Id" />
 
         <div>
             <ul>
-                @if (Model.EditList.Products != null && Model.EditList.Products.Any()) // Kolla om det finns produkter
+                @if (Model.EditList.Products != null) // Kolla om det finns produkter
                 {
                     foreach (var product in Model.EditList.Products) // Loopa genom produkterna
                     {
-                        <li>@product.Name - @product.Amount @product.Category</li>
+                        <li>
+                            @product.Name - @product.Amount @product.Category
+
+                            <form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.Id" style="display:inline;">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <button type="submit" class="btn btn-danger" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+
+                            <form method="post" asp-page="/MyPage" asp-page-handler="EditProduct" style="display:inline;">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </form>
+                        </li>
                     }
                 }
                 else
-                {
-                    <li>No products added yet.</li>
-                }
-
-                <input type="text" id="Title" name="EditList.Title" value="@Model.EditList.Title" class="form-control" />
+{
+                        <li>No products added yet.</li>
+}         
             </ul>
 
             <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
-            <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Cancel</button>
+            <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">Back</button>
         </div>
     </form>
 
 
-    
+    // Lägger till ny produkt i befintlig lista
         <form method="post" asp-page-handler="AddProduct" id="addProductForm" style="display: none;">
         <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
 
         <h3>Add a New Product</h3>
 
         <label for="ProductName">Product Name:</label>
-        <input type="text" asp-for="AddNewProduct.Name" class="form-control" placeholder="Enter product name" required />
+        <input type="text" asp-for="AddNewProduct.Name" class="form-control" placeholder="Enter product name"/>
     
         <label for="Amount">Amount:</label>
-        <input type="number" asp-for="AddNewProduct.Amount" class="form-control" placeholder="Enter amount" required />
+        <input type="number" asp-for="AddNewProduct.Amount" class="form-control" placeholder="Enter amount"/>
     
         <label for="Category">Category:</label>
-        <select asp-for="AddNewProduct.Category" id="Category" name="AddNewProduct.Category" class="form-control" required>
+        <select asp-for="AddNewProduct.Category" id="Category" name="AddNewProduct.Category" class="form-control">
             <option value="">--Select Category--</option>
             <option value="FruitsVegetables">Fruits & Vegetables</option>
             <option value="Fridge">Fridge items</option>
@@ -112,80 +143,98 @@
 
 }
 
-                @if(Model.ShoppingLists!= null)
-                {
-                    foreach (var list in Model.ShoppingLists)
-                    {
-                        <div>
-                            <p><Strong>Listname:</strong>@list.Title</p>
+<h2>Shared lists</h2>
+@if (Model.SharedShoppingLists != null && Model.SharedShoppingLists.Any())
+{
+    <ul>
+        @foreach (var list in Model.SharedShoppingLists)
+        {
+            <li>
+                <strong onclick="showListDetails('@list.Id', true)">@list.Title</strong>
 
-                                @if (list.Products != null)
-                                {
-                                    foreach (var product in list.Products)
-                                    {
-                                        <p><Strong>Product:</strong>@product.Name</p>
-                                        <p><Strong>Category:</strong>@product.Category</p>
-                                        <p><Strong>Amount:</strong>@product.Amount</p>
-                                    }
-                                }
-                                else
-                                {
-                                    <p>No products found.</p>
-                                }
-                      
-                        @* functions for sharing shoppinglists *@
-                        <form method="post">
-                            <input type="email" asp-for="UserEmail" placeholder="Enter user´s email" required/>
-                            <button type="submit" asp-page-handler="Share" asp-route-listId="@list.Id">Share</button>
-
-                        </form>
-                         
-
-                         </div>
-                    }   
-                }
-            <h2>Shared lists</h2>
-            @if (Model.SharedShoppingLists != null)
-            {
-                foreach (var list in Model.SharedShoppingLists)
-                {
-                    <p><Strong>Shared list:</strong>@list.Title</p>
-
-                    @if(list.Products != null)
-                    {
-                        foreach (var product in list.Products)
-                        {
-                            <p><Strong>Product:</strong>@product.Name</p>
-                            <p><Strong>Category:</strong>@product.Category</p>
-                            <p><Strong>Amount:</strong>@product.Amount</p>
-                        }
-                    }
-                    else
-                    {
-                        <p>No products found.</p>
-                    }
-                }
-            }
-            else 
-            {
-                <p>No Shoppinglist(s) found.</p>
-            }
+                <!--Delete Button-->
+                <form method="post" asp-page-handler="Delete" style="display:inline;">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <button type="submit" class="btn btn-danger" title="Delete" style="padding: 4px 8px; font-size: 75%;">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+                <!--Edit Button-->
+                <form method="post" asp-page-handler="Edit" style="display:inline;">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </form>
+                <!--Share Button-->
+                <form method="post" asp-page-handler="Share" style="display:inline;" onsubmit="return toggleShareInput('@list.Id');">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <button type="submit" class="btn btn-success small-btn" title="Share" style="padding: 4px 8px; font-size: 75%;">
+                        <i class="bi bi-share"></i>
+                    </button>
+                </form>
+                <!-- Hidden Email Input Field -->
+                <form method="post" asp-page-handler="Share" id="emailForm-@list.Id" style="display:none; margin-top: 5px;">
+                    <input type="hidden" name="listId" value="@list.Id" />
+                    <input type="email" name="UserEmail" placeholder="Enter user’s email" required />
+                    <button type="submit" class="btn btn-success small-btn">Send</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No Shoppinglist(s) found.</p>
+}
 
 
 
 @* Script for showing form Add New Product *@
 <script>
-@*     function showAddProductForm() {
-        document.getElementById("addProductForm").style.display = "block";
-    } *@
 
     function showAddProductForm() {
     var form = document.getElementById("addProductForm");
     form.style.display = "block"; // Gör formuläret synligt
 }
 </script>
-
-
+@* Script showing email input for sharing shoppinglists *@
+<script>
+    function toggleShareInput(listId) {
+        var form = document.getElementById("emailForm-" + listId);
+        // Toggle the display of the email form
+        if (form.style.display === "none" || form.style.display === "") {
+            form.style.display = "inline-block";
+        } else {
+            form.style.display = "none";
+        }
+        return false; // Prevents form submission
+    }
+</script>
+@* script for showing list details for both your own lists and shared lists*@
+<script>
+    function showListDetails(listId, isShared = false) {
+        const handler = isShared ? 'SharedListDetails' : 'ListDetails';
+        fetch(`/MyPage?handler=${handler}&id=${listId}`)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result); // Log the fetched data
+                if (result.success) {
+                    const listDetails = result.data;
+                    const listDetailsDiv = document.getElementById('listDetails');
+                    listDetailsDiv.innerHTML = `
+                        <h2>${listDetails.title}</h2>
+                        <ul>
+                            ${listDetails.products.map(product => `<li>${product.name} - ${product.amount} ${product.category}</li>`).join('')}
+                        </ul>
+                    `;
+                } else {
+                    console.error('Error:', result.message);
+                }
+            })
+            .catch(error => console.error('Error fetching list details:', error));
+    }
+</script>
 
 <style>
     .icon {
@@ -194,20 +243,31 @@
 
     .Header {
         margin-bottom: 20px;
+        text-align: center;
+        width: 100%;
+        display:block;
     }
 
     .container {
-        display: flex;
-        justify-content: space-between;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    margin: 0;
+    padding-top: 20px;
+    max-width: 100%;
+    
     }
 
     .left-Section {
-        width: 60%;
+    flex: 0 0 45%;
     }
 
-    .right-Section {
-        width: 35%;
-    }
+ .right-Section {
+    flex: 0 0 45%; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+ }
 
     .btnNewShoppingList {
         background-color: mediumpurple;
