@@ -127,6 +127,11 @@
         shoppingList.push(newItem);
         updateShoppingListUI();
         updateProductFields(); // Uppdatera hidden fields så de skickas till backend
+
+        // Clear input fields after adding a product to the list
+        document.getElementById("product").value = "";  
+        document.getElementById("amount").value = "";   
+        document.getElementById("category").value = ""; 
     });
 
     function updateShoppingListUI() {
@@ -207,6 +212,18 @@
         updateProductFields();
     });
 
+</script>
+
+<script>
+    document.getElementById("createListForm").addEventListener("submit", function () {
+        setTimeout(() => {
+            document.querySelectorAll("#createListForm input, #createListForm select").forEach(input => {
+                if (input.type !== "hidden") { // Don't clear hidden fields like List ID
+                    input.value = "";
+                }
+            });
+        }, 100);
+    });
 </script>
 
 <style>
