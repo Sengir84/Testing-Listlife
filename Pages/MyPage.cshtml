@@ -11,7 +11,7 @@
     </div>
 }
 
-<h1 class="Header">Your Shopping Lists</h1>
+<h1 class="Header">Your Shoppinglists</h1>
 
 <section class="container">
     <!-- Om ingen lista är vald för redigering, visa shoppinglistor -->
@@ -39,11 +39,20 @@
                                     <input type="hidden" name="listId" value="@list.Id" />
                                     <button type="submit" class="btn btn-primary small-btn"><i class="bi bi-pencil"></i></button>
                                 </form>
-                                <!-- Dela en shoppinglista -->
-                                <form method="post" asp-page-handler="Share" style="display:inline;">
+                                <!--Share Button-->
+                                <form method="post" asp-page-handler="Share" style="display:inline;" onsubmit="return toggleShareInput('@list.Id');">
                                     <input type="hidden" name="listId" value="@list.Id" />
-                                    <button type="submit" class="btn btn-success small-btn"><i class="bi bi-share"></i></button>
+                                    <button type="submit" class="btn btn-success small-btn" title="Share" style="padding: 4px 8px; font-size: 75%;">
+                                        <i class="bi bi-share"></i>
+                                    </button>
                                 </form>
+                                <!-- Hidden Email Input Field -->
+                                <form method="post" asp-page-handler="Share" id="emailForm-@list.Id" style="display:none; margin-top: 5px;">
+                                    <input type="hidden" name="listId" value="@list.Id" />
+                                    <input type="email" name="UserEmail" placeholder="Enter user’s email" required />
+                                    <button type="submit" class="btn btn-success small-btn">Send</button>
+                                </form>
+                                
                             </div>
                         </li>
                     }
@@ -51,23 +60,44 @@
             }
             <!-- Knapp för att skapa en ny shoppinglista -->
             <form asp-page="/CreateNewShoppingList" method="get">
-                <button type="submit" class="btnNewShoppingList">Create New Shopping List</button>
+                <button type="submit" class="btnNewShoppingList">Create New Shoppinglist</button>
             </form>
 
-            <h2>Shared Lists</h2>
-            <!-- Visar delade listor -->
+            <h2>Shared lists</h2>
             @if (Model.SharedShoppingLists != null && Model.SharedShoppingLists.Any())
             {
-                <ul class="list-group">
+                <ul>
                     @foreach (var list in Model.SharedShoppingLists)
                     {
-                        <li class="list-group-item">
-                            <!-- Visar delad lista och gör den klickbar -->
-                            <span class="list-title" onclick="showListDetails('@list.Id', true)">@list.Title</span>
-                            <!-- Möjlighet att redigera den delade listan -->
+                        <li>
+                            <strong onclick="showListDetails('@list.Id', true)">@list.Title</strong>
+
+                            <!--Delete Button-->
+                            <form method="post" asp-page-handler="Delete" style="display:inline;">
+                                <input type="hidden" name="listId" value="@list.Id" />
+                                <button type="submit" class="btn btn-danger" title="Delete" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                            <!--Edit Button-->
                             <form method="post" asp-page-handler="Edit" style="display:inline;">
                                 <input type="hidden" name="listId" value="@list.Id" />
-                                <button type="submit" class="btn btn-primary small-btn"><i class="bi bi-pencil"></i></button>
+                                <button type="submit" class="btn btn-primary small-btn" title="Edit" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </form>
+                            <!--Share Button-->
+                            <form method="post" asp-page-handler="Share" style="display:inline;" onsubmit="return toggleShareInput('@list.Id');">
+                                <input type="hidden" name="listId" value="@list.Id" />
+                                <button type="submit" class="btn btn-success small-btn" title="Share" style="padding: 4px 8px; font-size: 75%;">
+                                    <i class="bi bi-share"></i>
+                                </button>
+                            </form>
+                            <!-- Hidden Email Input Field -->
+                            <form method="post" asp-page-handler="Share" id="emailForm-@list.Id" style="display:none; margin-top: 5px;">
+                                <input type="hidden" name="listId" value="@list.Id" />
+                                <input type="email" name="UserEmail" placeholder="Enter user’s email" required />
+                                <button type="submit" class="btn btn-success small-btn">Send</button>
                             </form>
                         </li>
                     }
@@ -75,7 +105,7 @@
             }
             else
             {
-                <p>No Shared Lists found.</p>
+                <p>No Shoppinglist(s) found.</p>
             }
         </div>
     }
@@ -128,11 +158,29 @@
 </section>
 
 <script>
-    // Funktion för att visa formuläret för att lägga till en produkt
+    
     function showAddProductForm() {
         var form = document.getElementById("addProductForm");
         form.style.display = "block";
     }
+
+
+</script>
+
+
+    @* Script showing email input for sharing shoppinglists *@
+    <script>
+        function toggleShareInput(listId) {
+            var form = document.getElementById("emailForm-" + listId);
+            // Toggle the display of the email form
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "inline-block";
+            } else {
+                form.style.display = "none";
+            }
+            return false; // Prevents form submission
+        }
+
 </script>
 
 <style>
