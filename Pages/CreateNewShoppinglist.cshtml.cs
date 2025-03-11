@@ -85,6 +85,14 @@ namespace ListLife.Pages
                 }
 
                 await Dbcontext.SaveChangesAsync(); // Spara produkterna i databasen
+
+                await Dbcontext.SaveChangesAsync(); // Save products in DB
+
+                // Clear product input fields
+                ModelState.Remove("Products");
+                Products = new List<Product>();
+
+                
             }
 
             return RedirectToPage("/MyPage");

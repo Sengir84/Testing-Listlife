@@ -6,69 +6,70 @@
 <h1>Create New Shoppinglist</h1>
 
 <section class="shopping-container">
-    <!-- Vänstra sektionen: Input -->
+    <!-- Vänstra sektionen: Inmatningsformulär -->
     <section class="shopping-form">
-        <form method="post">
+        <form method="post" id="createListForm">
             <fieldset>
-                <legend>Shopping List Details</legend>
+                <legend>Detaljer för Shoppinglista</legend>
 
                 <div>
-                    <label asp-for="ShoppingList.Title">Shoppinglist Name:</label>
-                    <input asp-for="ShoppingList.Title" id="listTitleInput" class="form-control" placeholder="Enter Listname" required />
+                    <label asp-for="ShoppingList.Title">Shoppinglistans namn:</label>
+                    <input asp-for="ShoppingList.Title" id="listTitleInput" class="form-control" placeholder="Ange listnamn" required />
                 </div>
 
                 <div>
-                    <label>Category:</label>
+                    <label>Kategori:</label>
                     <select id="category" class="form-control" required>
-                        <option value="">--Select Category--</option>
-                        <option value="FruitsVegetables">Fruits & Vegetables</option>
-                        <option value="Fridge">Fridge items</option>
-                        <option value="Freezer">Freezer items</option>
-                        <option value="Pantry">Pantry items</option>
-                        <option value="Hygiene">Hygiene items</option>
-                        <option value="Other">Other</option>
+                        <option value="">--Välj kategori--</option>
+                        <option value="FruitsVegetables">Frukt & Grönt</option>
+                        <option value="Fridge">Kylvaror</option>
+                        <option value="Freezer">Frysvaror</option>
+                        <option value="Pantry">Skafferi</option>
+                        <option value="Hygiene">Hygienartiklar</option>
+                        <option value="Other">Övrigt</option>
                     </select>
                 </div>
 
                 <div>
-                    <label>Product Name:</label>
-                    <input id="product" class="form-control" placeholder="Enter product name" required />
+                    <label>Produktnamn:</label>
+                    <input id="product" class="form-control" placeholder="Ange produktnamn" required />
                 </div>
 
                 <div>
-                    <label>Amount:</label>
+                    <label>Mängd:</label>
                     <input type="number" id="amount" class="form-control" min="1" step="1" required />
                 </div>
 
-                <!-- Lista för att skicka produkter till backend -->
+                <!-- Container för dolda fält som skickar produktdata till backend -->
                 <div id="productListContainer"></div>
-
             </fieldset>
 
             <nav class="button-group">
                 <button type="button" id="addToList" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Add to List
+                    <i class="bi bi-plus-circle"></i> Lägg till i listan
                 </button>
 
-                <button type="submit" class="btn btn-success">
-                    <i class="bi bi-save"></i> Create Shopping List
+                <!-- När man klickar "Create Shoppinglist", tas "required" bort från produktfälten -->
+                <button type="submit" class="btn btn-success" id="createListButton">
+                    <i class="bi bi-save"></i> Skapa Shoppinglista
                 </button>
 
                 <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">
-                    <i class="bi bi-x-circle"></i> Cancel
+                    <i class="bi bi-x-circle"></i> Avbryt
                 </button>
             </nav>
         </form>
     </section>
 
-    <!-- Högra sektionen: Realtidslista -->
+    <!-- Högra sektionen: Realtidsvisning av shoppinglistan -->
     <section class="shopping-list">
-        <h2>Your Shopping List:<span id="listTitleDisplay"></span></h2>
+        <h2>Din Shoppinglista:<span id="listTitleDisplay"></span></h2>
         <ul id="shoppingList"></ul>
     </section>
-    <!-- Recently Purchased - Rullista vid sidan -->
+
+    <!-- Sidopanel: Recently Purchased -->
     <section class="recently-purchased">
-        <h3>Recently Purchased</h3>
+        <h3>Senast köpta</h3>
         <ul id="recentlyPurchasedList">
             @foreach (var product in Model.RecentlyPurchasedProducts)
             {
@@ -81,132 +82,149 @@
             }
         </ul>
     </section>
-
 </section>
 
 <script>
     let shoppingList = [];
 
-    // Uppdaterar mängd beroende på kategori
+    // Uppdatera amount baserat på vald kategori
     document.getElementById("category").addEventListener("change", function () {
-        let category = this.value;
-        let amountField = document.getElementById("amount");
+      let category = this.value;
+      let amountField = document.getElementById("amount");
 
-        // Om kategori är Fruits & Vegetables, sätt mängd i kg, annars styck
-        if (category === "FruitsVegetables") {
-            amountField.step = "0.5";
-            amountField.placeholder = "Enter weight (kg)";
-        } else {
-            amountField.step = "1";
-            amountField.placeholder = "Enter quantity";
-        }
+      // Om kategorin är "Frukt & Grönt", använd kg; annars antal
+      if (category === "FruitsVegetables") {
+        amountField.step = "0.5";
+        amountField.placeholder = "Ange vikt (kg)";
+      } else {
+        amountField.step = "1";
+        amountField.placeholder = "Ange antal";
+      }
     });
 
+    // Vid klick på "Add to list": Kontrollera att fälten är ifyllda och lägg till produkten
     document.getElementById("addToList").addEventListener("click", function () {
-        let category = document.getElementById("category").value;
-        let product = document.getElementById("product").value;
-        let amount = document.getElementById("amount").value;
-        let listTitle = document.getElementById("listTitleInput").value.trim();
+      let category = document.getElementById("category").value;
+      let product = document.getElementById("product").value;
+      let amount = document.getElementById("amount").value;
+      let listTitle = document.getElementById("listTitleInput").value.trim();
 
-        if (!category || !product || !amount) {
-            alert("Please fill all fields!");
-            return;
-        }
+      // Kontrollera att alla fält är ifyllda
+      if (!category || !product || !amount) {
+        alert("Var god fyll i alla fält!");
+        return;
+      }
 
-        // Sätt listans namn i realtidsrutan
-        if (shoppingList.length === 0 && listTitle !== "") {
-            document.getElementById("listTitleDisplay").textContent = " " + listTitle;
-        }
+      // Om det är första produkten som läggs till, sätt listans namn i visningen
+      if (shoppingList.length === 0 && listTitle !== "") {
+        document.getElementById("listTitleDisplay").textContent = " " + listTitle;
+      }
 
-        let newItem = {
-            Category: category,
-            Name: product,
-            Amount: amount
-        };
+      let newItem = {
+        Category: category,
+        Name: product,
+        Amount: amount
+      };
 
-        shoppingList.push(newItem);
-        updateShoppingListUI();
-        updateProductFields(); // Uppdatera hidden fields så de skickas till backend
+      shoppingList.push(newItem);
+      updateShoppingListUI();
+      updateProductFields();
+
+      // Rensa inmatningsfälten efter att produkten lagts till
+      document.getElementById("product").value = "";
+      document.getElementById("amount").value = "";
+      document.getElementById("category").value = "";
     });
 
+    // Uppdatera den visuella listan med produkter
     function updateShoppingListUI() {
-        let shoppingListEl = document.getElementById("shoppingList");
-        shoppingListEl.innerHTML = "";
+      let shoppingListEl = document.getElementById("shoppingList");
+      shoppingListEl.innerHTML = "";
 
-        shoppingList.forEach((item, index) => {
-            let li = document.createElement("li");
-            li.classList.add("shopping-list-item");
-            li.innerHTML = `
-                <div class="list-item">
-                    <span class="item-text"><strong>${item.Category}:</strong> ${item.Name} (${item.Amount})</span>
-                    <button class="btn btn-sm btn-danger remove-item" data-index="${index}">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>`;
-            shoppingListEl.appendChild(li);
-        });
+      shoppingList.forEach((item, index) => {
+        let li = document.createElement("li");
+        li.classList.add("shopping-list-item");
+        li.innerHTML = `
+          <div class="list-item">
+            <span class="item-text"><strong>${item.Category}:</strong> ${item.Name} (${item.Amount})</span>
+            <button class="btn btn-sm btn-danger remove-item" data-index="${index}">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>`;
+        shoppingListEl.appendChild(li);
+      });
 
-        document.querySelectorAll(".remove-item").forEach(button => {
-            button.addEventListener("click", function () {
-                let index = this.getAttribute("data-index");
-                shoppingList.splice(index, 1);
-                updateShoppingListUI();
-                updateProductFields(); // Uppdatera fälten när en produkt tas bort
-            });
+      // Lägg till eventhandler för att ta bort produkter
+      document.querySelectorAll(".remove-item").forEach(button => {
+        button.addEventListener("click", function () {
+          let index = this.getAttribute("data-index");
+          shoppingList.splice(index, 1);
+          updateShoppingListUI();
+          updateProductFields();
         });
+      });
     }
 
+    // Uppdatera dolda fält med produktdata för att skicka till backend
     function updateProductFields() {
-        let productListContainer = document.getElementById("productListContainer");
-        productListContainer.innerHTML = ""; // Rensa fält
+      let productListContainer = document.getElementById("productListContainer");
+      productListContainer.innerHTML = "";
 
-        shoppingList.forEach((item, index) => {
-            productListContainer.innerHTML += `
-                <input type="hidden" name="Products[${index}].Category" value="${item.Category}" />
-                <input type="hidden" name="Products[${index}].Name" value="${item.Name}" />
-                <input type="hidden" name="Products[${index}].Amount" value="${item.Amount}" />
-            `;
-        });
+      shoppingList.forEach((item, index) => {
+        productListContainer.innerHTML += `
+          <input type="hidden" name="Products[${index}].Category" value="${item.Category}" />
+          <input type="hidden" name="Products[${index}].Name" value="${item.Name}" />
+          <input type="hidden" name="Products[${index}].Amount" value="${item.Amount}" />
+        `;
+      });
     }
 
-        // Gör Recently Purchased-produkter draggable
+    // Gör "Senast köpta"-produkterna draggable
     document.querySelectorAll(".recently-purchased-item").forEach(item => {
-        item.addEventListener("dragstart", function (event) {
-            event.dataTransfer.setData("category", this.getAttribute("data-category"));
-            event.dataTransfer.setData("name", this.getAttribute("data-name"));
-            event.dataTransfer.setData("amount", this.getAttribute("data-amount"));
-        });
+      item.addEventListener("dragstart", function (event) {
+        event.dataTransfer.setData("category", this.getAttribute("data-category"));
+        event.dataTransfer.setData("name", this.getAttribute("data-name"));
+        event.dataTransfer.setData("amount", this.getAttribute("data-amount"));
+      });
     });
 
     // Gör shoppinglistan till en droppbar yta
     let shoppingListEl = document.getElementById("shoppingList");
-
     shoppingListEl.addEventListener("dragover", function (event) {
-        event.preventDefault(); // Tillåter drop
+      event.preventDefault();
     });
-
     shoppingListEl.addEventListener("drop", function (event) {
-        event.preventDefault();
+      event.preventDefault();
+      let category = event.dataTransfer.getData("category");
+      let name = event.dataTransfer.getData("name");
+      let amount = event.dataTransfer.getData("amount");
 
-        // Hämta information om produkten
-        let category = event.dataTransfer.getData("category");
-        let name = event.dataTransfer.getData("name");
-        let amount = event.dataTransfer.getData("amount");
+      if (!category || !name || !amount) return;
 
-        if (!category || !name || !amount) return; // Förhindra tomma värden
-
-        // Lägg till produkten i shoppinglistan
-        let newItem = {
-            Category: category,
-            Name: name,
-            Amount: amount
-        };
-
-        shoppingList.push(newItem);
-        updateShoppingListUI();
-        updateProductFields();
+      let newItem = { Category: category, Name: name, Amount: amount };
+      shoppingList.push(newItem);
+      updateShoppingListUI();
+      updateProductFields();
     });
 
+    // När man klickar "Create Shoppinglist" tas "required" bort från produktfälten så att formuläret kan skickas även om de är tomma
+    document.getElementById("createListButton").addEventListener("click", function () {
+      document.getElementById("product").removeAttribute("required");
+      document.getElementById("amount").removeAttribute("required");
+      document.getElementById("category").removeAttribute("required");
+    });
+</script>
+
+<script>
+    document.getElementById("createListForm").addEventListener("submit", function () {
+        setTimeout(() => {
+            document.querySelectorAll("#createListForm input, #createListForm select").forEach(input => {
+                if (input.type !== "hidden") { // Don't clear hidden fields like List ID
+                    input.value = "";
+                }
+            });
+        }, 100);
+    });
 </script>
 
 <style>
@@ -250,7 +268,7 @@
             padding: 5px; 
         }
 
-    /* 🔹 Justerar varje produkt i shoppinglistan */
+    /* Justerar varje produkt i shoppinglistan */
     .shopping-list-item {
         display: flex;
         align-items: center;
@@ -259,7 +277,7 @@
         border-bottom: 1px solid #ccc;
     }
 
-    /* 🔹 Justerar textens placering */
+    /* Justerar textens placering */
     .list-item {
         display: flex;
         align-items: center;
@@ -267,7 +285,7 @@
         width: 100%;
     }
 
-    /* 🔹 Justerar produkttextens placering */
+    /* Justerar produkttextens placering */
     .item-text {
         font-size: 14px;
         word-wrap: break-word;
@@ -304,7 +322,7 @@
     }
  
 
-    /* 🔹  Recently Purchased-stil */
+    /* Recently Purchased-stil */
     .recently-purchased {
         width: 180px; /* Gör listan smalare */
         background-color: #2a2a2a;
@@ -317,14 +335,14 @@
         border: 1px solid #444; /* Mild kantlinje */
     }
 
-        /* 🔹 Justera titelstorlek */
+        /* Justera titelstorlek */
         .recently-purchased h3 {
             margin: 0;
             font-size: 14px;
             text-align: center;
         }
 
-    /* 🔹 Enskilda produktboxar */
+    /* Enskilda produktboxar */
     .recently-purchased-item {
         padding: 6px;
         background-color: #3b3b3b;
@@ -338,7 +356,7 @@
             background-color: #555;
         }
 
-    /* 🔹 Justera layouten för bättre avstånd */
+    /* Justera layouten för bättre avstånd */
     .shopping-container {
         display: flex;
         justify-content: space-between;
@@ -347,7 +365,7 @@
         gap: 20px; /* Skapar mer luft mellan sektionerna */
     }
 
-    /* 🔹 Ser till att shoppinglistan och Recently Purchased har samma höjd */
+    /* Ser till att shoppinglistan och Recently Purchased har samma höjd */
     .shopping-list, .recently-purchased {
         flex: 1;
         min-height: 280px;
