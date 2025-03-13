@@ -58,6 +58,11 @@
                     }
                 </ul>
             }
+
+            <div class="list-Section" id="listDetails">
+                <!-- The selected list details will be displayed here -->
+            </div>
+
             <!-- Knapp för att skapa en ny shoppinglista -->
             <form asp-page="/CreateNewShoppingList" method="get">
                 <button type="submit" class="btnNewShoppingList">Create New Shoppinglist</button>
@@ -183,6 +188,54 @@
 
 </script>
 
+@* script for showing list details for both your own lists and shared lists*@
+<script>
+    function showListDetails(listId, isShared = false) {
+        const handler = isShared ? 'SharedListDetails' : 'ListDetails';
+        fetch(`/MyPage?handler=${handler}&id=${listId}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    const listDetails = result.data;
+                    const listDetailsDiv = document.getElementById('listDetails');
+                    listDetailsDiv.innerHTML = `
+                        <h2>${listDetails.title}</h2>
+                        <ul class="list-group shopping-list">
+                            ${listDetails.products.map(product => `
+                                <li class="list-group-item d-flex align-items-center">
+                                    <!-- Only checkbox is clickable -->
+                                    <input class="form-check-input checkbox-item" type="checkbox" id="product-${product.id}" onclick="toggleCheck(this)">
+                                    <label class="form-check-label flex-grow-1" for="product-${product.id}">
+                                        ${product.name} - ${product.amount} ${product.category}
+                                    </label>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    `;
+                    // Restore checkbox states after loading the list
+                    restoreCheckedState();
+                } else {
+                    console.error('Error:', result.message);
+                }
+            })
+            .catch(error => console.error('Error fetching list details:', error));
+    }
+
+    function toggleCheck(checkbox) {
+        const productId = checkbox.id;
+        localStorage.setItem(productId, checkbox.checked);
+    }
+
+    function restoreCheckedState() {
+        document.querySelectorAll(".checkbox-item").forEach(checkbox => {
+            const productId = checkbox.id;
+            checkbox.checked = localStorage.getItem(productId) === "true";
+        });
+    }
+
+</script>
+
+
 <style>
     /* Stil för rubrik */
     .Header {
@@ -212,15 +265,50 @@
         border-radius: 10px;
     }
 
+    /* Sektionen där listan visas */
+    .list-Section {
+        text-align: center;
+        background-color: #333;
+        border-radius: 10px;
+        margin: 20px auto;
+        max-width: 350px;
+        
+    }
+    /* Checkboxar till listan*/
+    .checkbox-item {
+        width: 30px;
+        height: 30px;
+        border: 2px solid #333;
+        cursor: pointer;
+        padding: 5px
+    }
+
+    /* Tillåt inte click utanför checkboxen */
+    .list-group-item {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Stoppar störningar mellan label och checkbox */
+    .form-check-label {
+        pointer-events: none; /* Disables clicking on the label */
+    }
+
+    .checkbox-item:checked {
+        background-color: #4CAF50; /* Green check */
+        border-color: #4CAF50;
+    }
+
     /* Stil för knappen att skapa ny shoppinglista */
     .btnNewShoppingList {
         display: block;
-        width: 100%;
+        width: 25%;
         background-color: blue;
         color: white;
         padding: 10px;
+        border-radius: 10px;
         text-align: center;
-        margin-top: 10px;
+        margin: auto;
         border: none;
         cursor: pointer;
     }
