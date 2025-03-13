@@ -59,24 +59,19 @@
                 </ul>
             }
 
-            <div class="list-Section" id="listDetails">
-                <!-- The selected list details will be displayed here -->
-            </div>
+           
 
-            <!-- Knapp för att skapa en ny shoppinglista -->
-            <form asp-page="/CreateNewShoppingList" method="get">
-                <button type="submit" class="btnNewShoppingList">Create New Shoppinglist</button>
-            </form>
-
-            <h2>Shared lists</h2>
+          
+            
+            <h6>Shared lists</h6>
             @if (Model.SharedShoppingLists != null && Model.SharedShoppingLists.Any())
             {
-                <ul>
+                <ul class ="list-group">
                     @foreach (var list in Model.SharedShoppingLists)
                     {
-                        <li>
-                            <strong onclick="showListDetails('@list.Id', true)">@list.Title</strong>
-
+                        <li class ="list-group-item">
+                            <strong class="list-title" onclick="showListDetails('@list.Id', true)">@list.Title</strong>
+                            <div class="button-group">
                             <!--Delete Button-->
                             <form method="post" asp-page-handler="Delete" style="display:inline;">
                                 <input type="hidden" name="listId" value="@list.Id" />
@@ -104,6 +99,7 @@
                                 <input type="email" name="UserEmail" placeholder="Enter user’s email" required />
                                 <button type="submit" class="btn btn-success small-btn">Send</button>
                             </form>
+                            </div>
                         </li>
                     }
                 </ul>
@@ -112,8 +108,22 @@
             {
                 <p>No Shoppinglist(s) found.</p>
             }
+
+            <div class="list-Section" id="listDetails">
+                <!-- The selected list details will be displayed here -->
+            </div>
+
+            <!-- Knapp för att skapa en ny shoppinglista -->
+            <form asp-page="/CreateNewShoppingList" method="get">
+                <button type="submit" class="btnNewShoppingList">Create New Shoppinglist</button>
+            </form>
+
         </div>
+
+       
+
     }
+  
 
     <!-- Om en lista är vald för redigering, visa edit-sektionen -->
     @if (Model.EditList != null)
@@ -188,7 +198,7 @@
 
 </script>
 
-@* script for showing list details for both your own lists and shared lists*@
+@* script for showing list details and checkboxes for both your own lists and shared lists*@
 <script>
     function showListDetails(listId, isShared = false) {
         const handler = isShared ? 'SharedListDetails' : 'ListDetails';
@@ -204,7 +214,7 @@
                             ${listDetails.products.map(product => `
                                 <li class="list-group-item d-flex align-items-center">
                                     <!-- Only checkbox is clickable -->
-                                    <input class="form-check-input checkbox-item" type="checkbox" id="product-${product.id}" onclick="toggleCheck(this)">
+                                    <input class="form-check-input me-2 checkbox-item" type="checkbox" id="product-${product.id}" onclick="toggleCheck(this, '${listId}')">
                                     <label class="form-check-label flex-grow-1" for="product-${product.id}">
                                         ${product.name} - ${product.amount} ${product.category}
                                     </label>
@@ -221,15 +231,15 @@
             .catch(error => console.error('Error fetching list details:', error));
     }
 
-    function toggleCheck(checkbox) {
+        function toggleCheck(checkbox, listId) {
         const productId = checkbox.id;
-        localStorage.setItem(productId, checkbox.checked);
+        localStorage.setItem(`${listId}-${productId}`, checkbox.checked);
     }
 
-    function restoreCheckedState() {
+        function restoreCheckedState(listId) {
         document.querySelectorAll(".checkbox-item").forEach(checkbox => {
             const productId = checkbox.id;
-            checkbox.checked = localStorage.getItem(productId) === "true";
+            checkbox.checked = localStorage.getItem(`${listId}-${productId}`) === "true";
         });
     }
 
@@ -328,6 +338,7 @@
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 5px;
+        color: #ffffff;
     }
 
     /* Stil för listtitlar */
