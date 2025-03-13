@@ -24,6 +24,9 @@ namespace ListLife.Pages
             _userManager = userManager;
         }
 
+        
+
+
         //Properties for the sharing list functionality
         [BindProperty]
         public string UserEmail { get; set; }
@@ -43,6 +46,8 @@ namespace ListLife.Pages
 
         [BindProperty]
         public Product AddNewProduct { get; set; }
+
+        public bool IsEditing { get; set; }
 
         // Hämtar Shoppinglistorna
         public async Task OnGetAsync()
@@ -250,6 +255,7 @@ namespace ListLife.Pages
             }
 
             EditList = editList;
+            IsEditing = true;
 
             return Page();
         }
@@ -285,7 +291,7 @@ namespace ListLife.Pages
             AddNewProduct = new Product();
 
             EditList = shoppingList;
-
+            IsEditing = true;
             return Page();
         }
 
