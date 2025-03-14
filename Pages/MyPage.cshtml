@@ -132,13 +132,23 @@ else
             <ul class="product-list">
                 @foreach (var product in Model.EditList.Products)
                 {
-                    <li class="product-item">
+                    <li class="product-item"
+                        data-product-id="@product.Id"
+                        data-product-name="@product.Name"
+                        data-product-amount="@product.Amount"
+                        data-product-category="@product.Category">
                         <!-- Display products in the list -->
                         <span>@product.Name - @product.Amount @product.Category</span>
+                    <div class=" = button-group">
+                        <!-- Edit button -->
+                        <button type="button" class="btn btn-primary small-btn" onclick="populateEditForm(this)" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </button>
                         <!-- Delete a product from the list -->
                         <form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.Id" style="display:inline;">
                             <button type="submit" class="btn btn-danger small-btn"><i class="bi bi-trash"></i></button>
                         </form>
+                    </div>
                     </li>
                 }
             </ul>
@@ -151,12 +161,17 @@ else
             <!-- Form to add a new product -->
             <form method="post" asp-page-handler="AddProduct" id="addProductForm" style="display: none;">
                 <input type="hidden" name="shoppingListId" value="@Model.EditList.Id" />
-                <label for="ProductName">Product Name:</label>
-                <input type="text" asp-for="AddNewProduct.Name" class="form-control" placeholder="Enter product name" />
-                <label for="Amount">Amount:</label>
-                <input type="number" asp-for="AddNewProduct.Amount" class="form-control" placeholder="Enter amount" />
-                <label for="Category">Category:</label>
-                <select asp-for="AddNewProduct.Category" class="form-control">
+                <!-- Hidden field to hold the product id if editing -->
+                <input type="hidden" id="editProductId" name="editProductId" value="" />
+
+                <label for="inputProductName">Product Name:</label>
+                <input type="text" id="inputProductName" name="AddNewProduct.Name" class="form-control" placeholder="Enter product name" />
+
+                <label for="inputProductAmount">Amount:</label>
+                <input type="number" id="inputProductAmount" name="AddNewProduct.Amount" class="form-control" placeholder="Enter amount" />
+
+                <label for="inputProductCategory">Category:</label>
+                <select id="inputProductCategory" name="AddNewProduct.Category" class="form-control">
                     <option value="">--Select Category--</option>
                     <option value="FruitsVegetables">Fruits & Vegetables</option>
                     <option value="Fridge">Fridge items</option>
@@ -165,7 +180,8 @@ else
                     <option value="Hygiene">Hygiene items</option>
                     <option value="Other">Other</option>
                 </select>
-                <button type="submit" class="btn btn-primary">Add to Shoppinglist</button>
+
+                <button type="submit" id="addOrUpdateProduct" class="btn btn-primary">Add to Shoppinglist</button>
             </form>
         </div>
     }
@@ -245,6 +261,30 @@ else
 
 </script>
 
+<script>
+    function populateEditForm(button) {
+        // Locate the product item (assuming you stored product details as data attributes)
+        var productItem = button.closest('.product-item');
+
+        // Get product data attributes
+        var productId = productItem.getAttribute('data-product-id');
+        var productName = productItem.getAttribute('data-product-name');
+        var productAmount = productItem.getAttribute('data-product-amount');
+        var productCategory = productItem.getAttribute('data-product-category');
+
+        // Populate form fields
+        document.getElementById("inputProductName").value = productName;
+        document.getElementById("inputProductAmount").value = productAmount;
+        document.getElementById("inputProductCategory").value = productCategory;
+        document.getElementById("editProductId").value = productId;
+
+        // Change button text to "Update Product"
+        document.getElementById("addOrUpdateProduct").textContent = "Update Product";
+
+        // Ensure the form is visible
+        document.getElementById("addProductForm").style.display = "block";
+    }
+</script>
 
 <style>
     /* Stil för rubrik */
