@@ -3,24 +3,23 @@
 @{
 }
 
-<h1>Create New Shoppinglist</h1>
+<h1 id="CNSL-header">Create new shopping list</h1>
 
 <section class="shopping-container">
     <!-- Vänstra sektionen: Inmatningsformulär -->
     <section class="shopping-form">
         <form method="post" id="createListForm">
             <fieldset>
-                <legend>Detaljer för Shoppinglista</legend>
 
                 <div>
-                    <label asp-for="ShoppingList.Title">Shoppinglistans namn:</label>
-                    <input asp-for="ShoppingList.Title" id="listTitleInput" class="form-control" placeholder="Ange listnamn" required />
+                    <label asp-for="ShoppingList.Title">Shoppinglist title:</label>
+                    <input asp-for="ShoppingList.Title" id="listTitleInput" class="form-control" placeholder="Listname" required />
                 </div>
 
                 <div>
-                    <label>Kategori:</label>
+                    <label>Category:</label>
                     <select id="category" class="form-control" required>
-                        <option value="">--Välj kategori--</option>
+                        <option value="">--Choose category--</option>
                         <option value="FruitsVegetables">Fruits and vegetables</option>
                         <option value="Fridge">Fridge</option>
                         <option value="Freezer">Freezer</option>
@@ -31,12 +30,12 @@
                 </div>
 
                 <div>
-                    <label>Produktnamn:</label>
-                    <input id="product" class="form-control" placeholder="Ange produktnamn" required />
+                    <label>Product:</label>
+                    <input id="product" class="form-control" placeholder="Product" required />
                 </div>
 
                 <div>
-                    <label>Mängd:</label>
+                    <label>Amount:</label>
                     <input type="number" id="amount" class="form-control" min="1" step="1" required />
                 </div>
 
@@ -46,16 +45,16 @@
 
             <nav class="button-group">
                 <button type="button" id="addToList" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Lägg till i listan
+                    <i class="bi bi-plus-circle"></i> Add to list
                 </button>
 
                 <!-- När man klickar "Create Shoppinglist", tas "required" bort från produktfälten -->
                 <button type="submit" class="btn btn-success" id="createListButton">
-                    <i class="bi bi-save"></i> Skapa Shoppinglista
+                    <i class="bi bi-save"></i> Create shopping list
                 </button>
 
                 <button type="button" class="btn btn-danger" onclick="window.location.href='/MyPage'">
-                    <i class="bi bi-x-circle"></i> Avbryt
+                    <i class="bi bi-x-circle"></i> Cancel
                 </button>
             </nav>
         </form>
@@ -63,13 +62,13 @@
 
     <!-- Högra sektionen: Realtidsvisning av shoppinglistan -->
     <section class="shopping-list">
-        <h2>Din Shoppinglista:<span id="listTitleDisplay"></span></h2>
+        <h2>Your shoppinglist:<span id="listTitleDisplay"></span></h2>
         <ul id="shoppingList"></ul>
     </section>
 
     <!-- Sidopanel: Recently Purchased -->
     <section class="recently-purchased">
-        <h3>Senast köpta</h3>
+        <h3>Recently bought</h3>
         <ul id="recentlyPurchasedList">
             @foreach (var product in Model.RecentlyPurchasedProducts)
             {
@@ -111,7 +110,7 @@
 
       // Kontrollera att alla fält är ifyllda
       if (!category || !product || !amount) {
-        alert("Var god fyll i alla fält!");
+        alert("Please fill in all fields!");
         return;
       }
 
@@ -234,6 +233,24 @@
         color: white;
     }
 
+    /* Stilar för layouten */
+    .container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: auto;
+        padding: 0;
+    }
+
+    a.navbar-brand {
+      margin:0;
+    }
+
+    #CNSL-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+   
     .shopping-container {
         display: flex;
         justify-content: space-between;
