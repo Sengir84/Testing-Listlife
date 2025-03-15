@@ -141,7 +141,7 @@ else
                     <li class="product-item"
                         data-product-id="@product.Id"
                         data-product-name="@product.Name"
-                        data-product-amount="@product.Amount"
+                        data-product-amount="@product.Amount.ToString(System.Globalization.CultureInfo.InvariantCulture)"
                         data-product-category="@product.Category">
                         <!-- Display products in the list -->
                         <span>@product.Name - @product.Amount @product.Category</span>
