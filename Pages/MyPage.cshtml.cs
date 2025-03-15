@@ -24,6 +24,9 @@ namespace ListLife.Pages
             _userManager = userManager;
         }
 
+        
+
+
         //Properties for the sharing list functionality
         [BindProperty]
         public string UserEmail { get; set; }
@@ -43,6 +46,8 @@ namespace ListLife.Pages
 
         [BindProperty]
         public Product AddNewProduct { get; set; }
+
+        public bool IsEditing { get; set; }
 
         // Hämtar Shoppinglistorna
         public async Task OnGetAsync()
@@ -250,17 +255,18 @@ namespace ListLife.Pages
             }
 
             EditList = editList;
+            IsEditing = true;
 
             return Page();
         }
 
 
         // POST för att lägga till ny produkt i listan och spara till databasen
-        public async Task<IActionResult> OnPostAddProductAsync(int shoppingListId)
+        public async Task<IActionResult> OnPostAddProductAsync(int shoppingListId, int? editProductId)
         {
-            // Hämta shoppinglistan från databasen
+            // Fetch the shopping list including its products
             var shoppingList = await _context.ShoppingLists
-                .Include(sl => sl.Products) // Se till att produkterna är inkluderade
+                .Include(sl => sl.Products)
                 .FirstOrDefaultAsync(sl => sl.Id == shoppingListId);
 
             if (shoppingList == null)
@@ -268,24 +274,40 @@ namespace ListLife.Pages
                 return NotFound();
             }
 
-            // Skapa ny produkt och lägg till den i listan
-            var newProduct = new Product
+            if (editProductId.HasValue && editProductId.Value > 0)
             {
-                Name = AddNewProduct.Name,
-                Amount = AddNewProduct.Amount,
-                Category = AddNewProduct.Category,
-                ShoppingListId = shoppingListId // FK kopplas här
-            };
+                // Update an existing product
+                var existingProduct = shoppingList.Products.FirstOrDefault(p => p.Id == editProductId.Value);
+                if (existingProduct == null)
+                {
+                    return NotFound();
+                }
+                existingProduct.Name = AddNewProduct.Name;
+                existingProduct.Amount = AddNewProduct.Amount;
+                existingProduct.Category = AddNewProduct.Category;
+            }
+            else
+            {
+                // Create a new product and add it to the shopping list
+                var newProduct = new Product
+                {
+                    Name = AddNewProduct.Name,
+                    Amount = AddNewProduct.Amount,
+                    Category = AddNewProduct.Category,
+                    ShoppingListId = shoppingListId   // FK relationship
+                };
 
-            _context.Products.Add(newProduct);
+                _context.Products.Add(newProduct);
+            }
+
             await _context.SaveChangesAsync();
 
-            // Reset the model
-            ModelState.Clear(); // Ensures Razor Page doesn't remember old values
+            // Reset the model state so that old values are not remembered
+            ModelState.Clear();
             AddNewProduct = new Product();
 
             EditList = shoppingList;
-
+            IsEditing = true;
             return Page();
         }
 
