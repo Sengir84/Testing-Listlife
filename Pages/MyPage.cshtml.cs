@@ -90,17 +90,13 @@ namespace ListLife.Pages
                 // Get user's shopping lists and include related products
                 ShoppingLists = await _context.ShoppingLists
                     .Where(u => u.UserId == user.Id)
-                    .Include(sl => sl.Products)  // Inkludera produkter
+                    .Include(sl => sl.Products)  // Include products
                     .ToListAsync();
             }
-            else
-            {
-                Message = "No products added yet."; // Funkar inte
-            }
 
-            if (EditList == null)
+            if (EditList == null || (EditList.Products != null && !EditList.Products.Any()))
             {
-                return NotFound();
+                Message = "No products added yet.";
             }
 
             return Page();
@@ -115,7 +111,7 @@ namespace ListLife.Pages
                 return Page();
             }
 
-            // Get currently logged-in user ID
+            // Hämta den inlohhade användar-ID
             var userId = _userManager.GetUserId(User);
             var newList = new UserList
             {

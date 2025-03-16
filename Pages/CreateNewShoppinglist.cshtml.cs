@@ -88,7 +88,7 @@ namespace ListLife.Pages
 
                 await Dbcontext.SaveChangesAsync(); // Save products in DB
 
-                // Clear product input fields
+                // Rensa product input fält
                 ModelState.Remove("Products");
                 Products = new List<Product>();
 

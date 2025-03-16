@@ -135,6 +135,14 @@ else
     {
         <div class="edit-section">
             <h2>Edit shopping list: @Model.EditList.Title</h2>
+
+            @if (Model.EditList.Products == null || !Model.EditList.Products.Any())
+            {
+                <p>No products added yet.</p>
+            }
+            else
+            {
+
             <ul class="product-list">
                 @foreach (var product in Model.EditList.Products)
                 {
@@ -158,6 +166,7 @@ else
                     </li>
                 }
             </ul>
+            }
 
             <!-- Button to add a new product -->
             <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
