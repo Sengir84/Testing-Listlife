@@ -347,10 +347,13 @@ namespace ListLife.Pages
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
 
-                //// Hämta den uppdaterade shoppinglistan och dess produkter
+                // Hämta den uppdaterade shoppinglistan och dess produkter
                 EditList = await _context.ShoppingLists
                     .Include(s => s.Products)
                     .FirstOrDefaultAsync(s => s.Id == shoppingListId);
+
+                // Set IsEditing to true to remain in edit mode
+                IsEditing = true;
             }
 
             // Återgå till samma sida och visa uppdaterad lista
