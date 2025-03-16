@@ -86,21 +86,6 @@
 <script>
     let shoppingList = [];
 
-    // Uppdatera amount baserat på vald kategori
-    document.getElementById("category").addEventListener("change", function () {
-      let category = this.value;
-      let amountField = document.getElementById("amount");
-
-      // Om kategorin är "Frukt & Grönt", använd kg; annars antal
-      if (category === "FruitsVegetables") {
-        amountField.step = "0.5";
-        amountField.placeholder = "Ange vikt (kg)";
-      } else {
-        amountField.step = "1";
-        amountField.placeholder = "Ange antal";
-      }
-    });
-
     // Vid klick på "Add to list": Kontrollera att fälten är ifyllda och lägg till produkten
     document.getElementById("addToList").addEventListener("click", function () {
       let category = document.getElementById("category").value;
