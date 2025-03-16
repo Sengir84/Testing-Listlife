@@ -6,7 +6,7 @@
 <h1 id="CNSL-header">Create new shopping list</h1>
 
 <section class="shopping-container">
-    <!-- Vänstra sektionen: Inmatningsformulär -->
+    <!-- Left section: Input form -->
     <section class="shopping-form">
         <form method="post" id="createListForm">
             <fieldset>
@@ -39,7 +39,7 @@
                     <input type="number" id="amount" class="form-control" min="1" step="1" required />
                 </div>
 
-                <!-- Container för dolda fält som skickar produktdata till backend -->
+                <!-- Container for hidden fields that send product data to the backend -->
                 <div id="productListContainer"></div>
             </fieldset>
 
@@ -48,7 +48,7 @@
                     <i class="bi bi-plus-circle"></i> Add to list
                 </button>
 
-                <!-- När man klickar "Create Shoppinglist", tas "required" bort från produktfälten -->
+                <!-- When clicking "Create Shoppinglist", "required" is removed from the product fields -->
                 <button type="submit" class="btn btn-success" id="createListButton">
                     <i class="bi bi-save"></i> Create shopping list
                 </button>
@@ -60,13 +60,13 @@
         </form>
     </section>
 
-    <!-- Högra sektionen: Realtidsvisning av shoppinglistan -->
+    <!-- Right section: Real-time display of the shopping list -->
     <section class="shopping-list">
         <h2>Your shoppinglist:<span id="listTitleDisplay"></span></h2>
         <ul id="shoppingList"></ul>
     </section>
 
-    <!-- Sidopanel: Recently Purchased -->
+    <!-- Sidebar: Recently Purchased -->
     <section class="recently-purchased">
         <h3>Recently bought</h3>
         <ul id="recentlyPurchasedList">
@@ -86,20 +86,20 @@
 <script>
     let shoppingList = [];
 
-    // Vid klick på "Add to list": Kontrollera att fälten är ifyllda och lägg till produkten
+    // When clicking "Add to list": Check that the fields are filled in and add the product
     document.getElementById("addToList").addEventListener("click", function () {
       let category = document.getElementById("category").value;
       let product = document.getElementById("product").value;
       let amount = document.getElementById("amount").value;
       let listTitle = document.getElementById("listTitleInput").value.trim();
 
-      // Kontrollera att alla fält är ifyllda
+      // Check that all fields are filled in
       if (!category || !product || !amount) {
         alert("Please fill in all fields!");
         return;
       }
 
-      // Om det är första produkten som läggs till, sätt listans namn i visningen
+      // If it is the first product added, set the list name in the view
       if (shoppingList.length === 0 && listTitle !== "") {
         document.getElementById("listTitleDisplay").textContent = " " + listTitle;
       }
@@ -114,13 +114,13 @@
       updateShoppingListUI();
       updateProductFields();
 
-      // Rensa inmatningsfälten efter att produkten lagts till
+      // Clear the input fields after the product is added
       document.getElementById("product").value = "";
       document.getElementById("amount").value = "";
       document.getElementById("category").value = "";
     });
 
-    // Uppdatera den visuella listan med produkter
+    // Update the visual list of products
     function updateShoppingListUI() {
       let shoppingListEl = document.getElementById("shoppingList");
       shoppingListEl.innerHTML = "";
@@ -138,7 +138,7 @@
         shoppingListEl.appendChild(li);
       });
 
-      // Lägg till eventhandler för att ta bort produkter
+      // Add event handler to remove products
       document.querySelectorAll(".remove-item").forEach(button => {
         button.addEventListener("click", function () {
           let index = this.getAttribute("data-index");
@@ -149,7 +149,7 @@
       });
     }
 
-    // Uppdatera dolda fält med produktdata för att skicka till backend
+    /// Update hidden fields with product data to send to backend
     function updateProductFields() {
       let productListContainer = document.getElementById("productListContainer");
       productListContainer.innerHTML = "";
@@ -163,7 +163,7 @@
       });
     }
 
-    // Gör "Senast köpta"-produkterna draggable
+    // Make "Recently purchased" products draggable
     document.querySelectorAll(".recently-purchased-item").forEach(item => {
       item.addEventListener("dragstart", function (event) {
         event.dataTransfer.setData("category", this.getAttribute("data-category"));
@@ -172,7 +172,7 @@
       });
     });
 
-    // Gör shoppinglistan till en droppbar yta
+    // Make the shopping list a droppable surface
     let shoppingListEl = document.getElementById("shoppingList");
     shoppingListEl.addEventListener("dragover", function (event) {
       event.preventDefault();
@@ -191,7 +191,7 @@
       updateProductFields();
     });
 
-    // När man klickar "Create Shoppinglist" tas "required" bort från produktfälten så att formuläret kan skickas även om de är tomma
+    // When clicking "Create Shoppinglist", "required" is removed from the product fields so that the form can be submitted even if they are empty
     document.getElementById("createListButton").addEventListener("click", function () {
       document.getElementById("product").removeAttribute("required");
       document.getElementById("amount").removeAttribute("required");
@@ -218,7 +218,7 @@
         color: white;
     }
 
-    /* Stilar för layouten */
+    /* Styles for the layout */
     .container {
         display: flex;
         justify-content: space-between;
@@ -270,24 +270,24 @@
             padding: 5px; 
         }
 
-    /* Justerar varje produkt i shoppinglistan */
+    /* Adjusts each product in the shopping list */
     .shopping-list-item {
         display: flex;
         align-items: center;
-        justify-content: space-between; /* Gör så att texten och knappen hamnar rätt */
+        justify-content: space-between; /* Make sure the text and button are positioned correctly */
         padding: 5px;
         border-bottom: 1px solid #ccc;
     }
 
-    /* Justerar textens placering */
+    /* Adjusts the text position */
     .list-item {
         display: flex;
         align-items: center;
-        justify-content: flex-start; /* Alla produkter på vänster sida */
+        justify-content: flex-start; /* All products on the left side */
         width: 100%;
     }
 
-    /* Justerar produkttextens placering */
+    /* Adjusts the product text placement */
     .item-text {
         font-size: 14px;
         word-wrap: break-word;
@@ -295,8 +295,6 @@
         text-overflow: ellipsis;
         flex-grow: 1;
     }
-
-
 
     .button-group {
         display: flex;
@@ -310,9 +308,7 @@
         align-items: center;
         padding: 5px;
         border-bottom: 1px solid #ccc;
-    }
-
-   
+    }  
 
     .remove-item {
         background-color: red;
@@ -322,11 +318,10 @@
         border-radius: 5px;
         cursor: pointer;
     }
- 
 
     /* Recently Purchased-stil */
     .recently-purchased {
-        width: 180px; /* Gör listan smalare */
+        width: 180px; /* Narrow down the list */
         background-color: #2a2a2a;
         padding: 8px;
         border-radius: 8px;
@@ -334,17 +329,17 @@
         max-height: 280px;
         font-size: 13px;
         color: white;
-        border: 1px solid #444; /* Mild kantlinje */
+        border: 1px solid #444; /* Gentle border */
     }
 
-        /* Justera titelstorlek */
+        /* Adjust title size */
         .recently-purchased h3 {
             margin: 0;
             font-size: 14px;
             text-align: center;
         }
 
-    /* Enskilda produktboxar */
+    /* Individual product boxes */
     .recently-purchased-item {
         padding: 6px;
         background-color: #3b3b3b;
@@ -358,16 +353,16 @@
             background-color: #555;
         }
 
-    /* Justera layouten för bättre avstånd */
+    /* Adjust layout for better spacing */
     .shopping-container {
         display: flex;
         justify-content: space-between;
         max-width: 900px;
         margin: auto;
-        gap: 20px; /* Skapar mer luft mellan sektionerna */
+        gap: 20px; /* Creates more air between the sections */
     }
 
-    /* Ser till att shoppinglistan och Recently Purchased har samma höjd */
+    /* Make sure the shopping list and Recently Purchased have the same height */
     .shopping-list, .recently-purchased {
         flex: 1;
         min-height: 280px;
