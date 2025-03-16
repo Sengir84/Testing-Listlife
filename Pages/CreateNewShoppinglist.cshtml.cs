@@ -12,13 +12,13 @@ namespace ListLife.Pages
 
     public class CreateNewShoppingList : PageModel
     {
-        // instans av databasen för att lagra listor
+        // instance of the database to store lists
         private readonly ApplicationDbContext Dbcontext;
 
-        // Hanterar användare via ASP.NET Identity (UserManager) för att hämta och hantera inloggade användare
+        // Manages users via ASP.NET Identity (UserManager) to retrieve and manage logged in users
         private readonly UserManager<UserList> userManager;
 
-        // Konstruktor
+        // Constructor
         public CreateNewShoppingList(ApplicationDbContext context, UserManager<UserList> userManager)
         {
             this.Dbcontext = context;
@@ -26,7 +26,7 @@ namespace ListLife.Pages
         }
 
         [BindProperty]
-        // Property för att hålla användarens shoppinglistor
+        // Property to hold users shopping lists 
         public ShoppingList ShoppingList { get; set; }
 
         public string UserListName { get; set; }
@@ -42,7 +42,7 @@ namespace ListLife.Pages
 
         public async Task OnGetAsync()
         {
-            var user = await userManager.GetUserAsync(User); // Hämta den inloggade användaren
+            var user = await userManager.GetUserAsync(User); // Get the logged in user
             if (user != null)
             {
                 UserListName = user.ListName;
@@ -52,10 +52,10 @@ namespace ListLife.Pages
                     .Where(s => s.UserId == user.Id)
                     .ToListAsync();
 
-                // Hämta nyligen köpta produkter (senaste 10 produkterna från tidigare shoppinglistor)
+                // Retrieve recently purchased products (last 10 products from previous shopping lists)
                 RecentlyPurchasedProducts = await Dbcontext.Products
                     .Where(p => p.ShoppingList.UserId == user.Id)
-                    .OrderByDescending(p => p.Id) // Senaste först
+                    .OrderByDescending(p => p.Id) // Latest first 
                     .Take(10)
                     .ToListAsync();
             }
@@ -75,20 +75,20 @@ namespace ListLife.Pages
                 };
 
                 Dbcontext.ShoppingLists.Add(newShoppingList);
-                await Dbcontext.SaveChangesAsync(); // Sparar shoppinglistan och får ID
+                await Dbcontext.SaveChangesAsync(); // Saves shopping list and gets ID
 
-                // Lägg till produkter kopplade till shoppinglistan
+                // Add products to the connected shopping list
                 foreach (var product in Products)
                 {
-                    product.ShoppingListId = newShoppingList.Id; // Koppla produkten till rätt lista
+                    product.ShoppingListId = newShoppingList.Id; // Link the product to the correct list
                     Dbcontext.Products.Add(product);
                 }
 
-                await Dbcontext.SaveChangesAsync(); // Spara produkterna i databasen
+                await Dbcontext.SaveChangesAsync(); // Save products to database 
 
                 await Dbcontext.SaveChangesAsync(); // Save products in DB
 
-                // Clear product input fields
+                // Rensa product input fält
                 ModelState.Remove("Products");
                 Products = new List<Product>();
 

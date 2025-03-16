@@ -49,7 +49,7 @@ namespace ListLife.Pages
 
         public bool IsEditing { get; set; }
 
-        // Hämtar Shoppinglistorna
+        // Get Shoppinglists based on user
         public async Task OnGetAsync()
         {
             // Get user
@@ -69,7 +69,7 @@ namespace ListLife.Pages
             }
         }
 
-        // Hämta ShoppingId baserat på Id samt tillhörande produkter
+        // Get ShoppingId based on Id and associated products
         public async Task<IActionResult> OnGetEditAsync(int? id)
         {
             if (id == null)
@@ -90,17 +90,13 @@ namespace ListLife.Pages
                 // Get user's shopping lists and include related products
                 ShoppingLists = await _context.ShoppingLists
                     .Where(u => u.UserId == user.Id)
-                    .Include(sl => sl.Products)  // Inkludera produkter
+                    .Include(sl => sl.Products)  // Include products
                     .ToListAsync();
             }
-            else
-            {
-                Message = "No products added yet."; // Funkar inte
-            }
 
-            if (EditList == null)
+            if (EditList == null || (EditList.Products != null && !EditList.Products.Any()))
             {
-                return NotFound();
+                Message = "No products added yet.";
             }
 
             return Page();
@@ -115,7 +111,7 @@ namespace ListLife.Pages
                 return Page();
             }
 
-            // Get currently logged-in user ID
+            // Get the logged in User's ID
             var userId = _userManager.GetUserId(User);
             var newList = new UserList
             {
@@ -244,9 +240,9 @@ namespace ListLife.Pages
 
         public async Task<IActionResult> OnPostEditAsync(int listId)
         {
-            // hämtar listan
+            // Get list from database based on listId
             var editList = await _context.ShoppingLists
-                .Include(sl => sl.Products)  // Inkludera produkterna
+                .Include(sl => sl.Products)  // Include products
                 .FirstOrDefaultAsync(sl => sl.Id == listId);
 
             if (editList == null)
@@ -261,7 +257,7 @@ namespace ListLife.Pages
         }
 
 
-        // POST för att lägga till ny produkt i listan och spara till databasen
+        // POST to add new product to the list and save to the database
         public async Task<IActionResult> OnPostAddProductAsync(int shoppingListId, int? editProductId)
         {
             // Fetch the shopping list including its products
@@ -320,34 +316,34 @@ namespace ListLife.Pages
                 return NotFound();
             }
 
-            // Uppdatera produktens egenskaper
+            // Update product properties
             product.Name = AddNewProduct.Name;
             product.Amount = AddNewProduct.Amount;
             product.Category = AddNewProduct.Category;
 
             await _context.SaveChangesAsync();
 
-            // Återgå till samma sida eller en annan sida efter att ha sparat ändringarna
+            // Return to the same page or another page after saving changes
             return RedirectToPage("/MyPage", new { id = product.ShoppingListId });
         }
 
         public async Task<IActionResult> OnPostDeleteProductAsync(int productId)
         {
-            // Hämta produkten baserat på produktens ID
+            // Get product based on product ID 
             var product = await _context.Products
-                .Include(p => p.ShoppingList) // Se till att få med shoppinglistan
+                .Include(p => p.ShoppingList) // Make sure shoppinglist is included
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
             if (product != null)
             {
-                // Hämta den shoppinglistan produkten tillhör
+                // Get the list that the products are connected to
                 var shoppingListId = product.ShoppingList.Id;
 
-                // Ta bort produkten
+                // Remove product
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
 
-                // Hämta den uppdaterade shoppinglistan och dess produkter
+                // Get the updated list and it's products
                 EditList = await _context.ShoppingLists
                     .Include(s => s.Products)
                     .FirstOrDefaultAsync(s => s.Id == shoppingListId);
@@ -356,7 +352,7 @@ namespace ListLife.Pages
                 IsEditing = true;
             }
 
-            // Återgå till samma sida och visa uppdaterad lista
+            // Return to the same page and update list
             return Page();
         }
 

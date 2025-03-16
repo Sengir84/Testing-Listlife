@@ -10,7 +10,7 @@
         @TempData["Message"]
     </div>
 }
-<!--Ändra H1 när man editerar-->
+<!-- H1 changes from your shopping lists to Edit shopping list-->
 @if (!Model.IsEditing)
 
 {
@@ -135,6 +135,14 @@ else
     {
         <div class="edit-section">
             <h2>Edit shopping list: @Model.EditList.Title</h2>
+
+            @if (Model.EditList.Products == null || !Model.EditList.Products.Any())
+            {
+                <p>No products added yet.</p>
+            }
+            else
+            {
+
             <ul class="product-list">
                 @foreach (var product in Model.EditList.Products)
                 {
@@ -158,6 +166,7 @@ else
                     </li>
                 }
             </ul>
+            }
 
             <!-- Button to add a new product -->
             <button type="button" class="btn btn-primary" onclick="showAddProductForm()">Add Product</button>
@@ -293,7 +302,7 @@ else
 </script>
 
 <style>
-    /* Stil för rubrik */
+    /* Style for header */
     .Header {
         text-align: center;
         margin-bottom: 20px;
@@ -305,7 +314,7 @@ else
         max-width: 150px;
     }
 
-    /* Stilar för layouten */
+    /* Style for layout */
     .container {
         display: flex;
         justify-content: space-between;
@@ -322,16 +331,16 @@ else
         margin-bottom: 15px;
     }
 
-    /* Vänster sektion (shoppinglistor) */
+    /* Left section (shopping lists) */
     .left-section {
         flex: 1;
     }
-    /*Döljer vänster sektion*/
+    /*Hide left section*/
     .hidden {
         display: none;
     }
 
-    /* Höger sektion (redigering) */
+    /* Right section (editing) */
     .edit-section {
         flex: 2;
         background-color: pink;
@@ -339,7 +348,7 @@ else
         border-radius: 10px;
     }
 
-    /* Sektionen där listan visas */
+    /* SSection where list is shown */
     .list-Section {
         text-align: center;
         background-color: #333;
@@ -348,7 +357,7 @@ else
         max-width: 350px;
         
     }
-    /* Checkboxar till listan*/
+    /* Checkboxar for list */
     .checkbox-item {
         width: 30px;
         height: 30px;
@@ -357,13 +366,13 @@ else
         padding: 5px
     }
 
-    /* Tillåt inte click utanför checkboxen */
+    /* Don't allow click outside checkbox */
     .list-group-item {
         display: flex;
         align-items: center;
     }
 
-    /* Stoppar störningar mellan label och checkbox */
+    /* Stops interference between label and checkbox */
     .form-check-label {
         pointer-events: none; /* Disables clicking on the label */
     }
@@ -377,7 +386,7 @@ else
         max-width: 250px;
     }
 
-    /* Stil för knappen att skapa ny shoppinglista */
+    /* Style for buttom to create new shopping list */
     .btnNewShoppingList {
         max-width:250px;
         background-color: blue;
@@ -389,13 +398,13 @@ else
         cursor: pointer;
     }
 
-    /* Stil för listgrupper */
+    /* Style for list groups */
     .list-group {
         list-style: none;
         padding: 0;
     }
 
-    /* Stil för enskilda listobjekt */
+    /* Style for individual listobjekts */
     .list-group-item {
         display: flex;
         justify-content: space-between;
@@ -407,7 +416,7 @@ else
         color: #ffffff;
     }
 
-    /* Stil för listtitlar */
+    /* Style for list titles */
     .list-title {
         flex-grow: 1;
         cursor: pointer;
@@ -415,13 +424,13 @@ else
         color: #ffffff;
     }
 
-    /* Stil för knapparna i listan */
+    /* Style for buttons in list */
     .button-group {
         display: flex;
         gap: 5px;
     }
 
-    /* Stil för enskilda produkter */
+    /* Style for individual products */
     .product-item {
         display: flex;
         justify-content: space-between;
@@ -432,7 +441,7 @@ else
         margin-bottom: 5px;
     }
 
-    /* Stil för små knappar */
+    /* Style for small buttons */
     .small-btn {
         padding: 4px 8px;
         font-size: 14px;

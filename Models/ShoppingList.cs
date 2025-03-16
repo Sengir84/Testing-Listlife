@@ -2,8 +2,6 @@
 {
     public class ShoppingList
     {
-        /* Representerar en enskild shoppinglista. Den är kopplad till användaren via UserId och UserList.*/
-
         public int Id { get; set; }
 
         // ConnectionTable
@@ -16,7 +14,7 @@
         //Navigation property
         public ICollection<SharedList> SharedWith { get; set; } = new List<SharedList>();
 
-        // Lista av produkter i shoppinglistan
+        // List of product in the shopping list
         public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

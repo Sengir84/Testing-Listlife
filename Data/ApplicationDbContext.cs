@@ -14,21 +14,10 @@ namespace ListLife.Data
 
         }
 
-        // Skapa tabell ShoppingLists i Databasen DbSet
+        // Create table ShoppingLists in Database DbSet
         public DbSet<ShoppingList> ShoppingLists { get; set; }
         public DbSet<SharedList> SharedLists { get; set; }
 
         public DbSet<Product> Products { get; set; }
-
-        // Decimal för Amount
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            // Konfigurera 'Amount' som decimal med precision 18 och skala 2
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Amount)
-                .HasColumnType("decimal(18,2)"); // precision = 18, skala = 2
-        }
     }
 }
