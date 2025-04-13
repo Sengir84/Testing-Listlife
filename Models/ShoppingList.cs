@@ -16,5 +16,8 @@
 
         // List of product in the shopping list
         public ICollection<Product> Products { get; set; } = new List<Product>();
+
+        //Refactored function for easier testing. Adds a product to the shopping list
+        
     }
 }

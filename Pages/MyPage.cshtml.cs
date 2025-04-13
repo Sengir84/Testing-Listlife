@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using ListLife.Services;
 
 namespace ListLife.Pages
 {
@@ -17,11 +18,14 @@ namespace ListLife.Pages
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<UserList> _userManager;
+        private readonly ListSharingService _listSharingService;
+
 
         public MyPageModel(ApplicationDbContext context, UserManager<UserList> userManager)
         {
             _context = context;
             _userManager = userManager;
+            _listSharingService = new ListSharingService(_context, _userManager);
         }
 
         
@@ -127,47 +131,72 @@ namespace ListLife.Pages
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostShareAsync(int listId)
+        public async Task<IActionResult> OnPostShareAsync(int listId, string UserEmail)
         {
-            if (string.IsNullOrWhiteSpace(UserEmail))
-            {
-                Message = "Enter a valid email address";
-                return RedirectToPage();
-            }
+            // Get the user to share with (find by email)
             var userToShareWith = await _userManager.FindByEmailAsync(UserEmail);
-            if (userToShareWith == null)
-            {
-                //Message for alert if user not found
-                TempData["Message"] = "User not found";
-                TempData["MessageType"] = "error";
-                return RedirectToPage();
-            }
-            //Control if the list is already shared with the user
-            bool alreadyShared = await _context.SharedLists
-                .AnyAsync(sl => sl.ShoppingListId == listId && sl.SharedWithUserId == userToShareWith.Id);
 
-            if (alreadyShared)
+            // Call the service to share the list
+            var result = await _listSharingService.ShareListAsync(listId, userToShareWith);
+
+            // Check if the operation was successful and provide feedback
+            if (result.success)
             {
-                //Message for alert if list is already shared
-                TempData["Message"] = "List is already shared with this user";
+                TempData["Message"] = result.message;
+                TempData["MessageType"] = "success";
+            }
+            else
+            {
+                TempData["Message"] = result.message;
                 TempData["MessageType"] = "error";
-                return RedirectToPage();
             }
 
-            var sharedList = new SharedList
-            {
-                SharedWithUserId = userToShareWith.Id,
-                ShoppingListId = listId
-            };
-
-            _context.SharedLists.Add(sharedList);
-            await _context.SaveChangesAsync();
-
-            //Message for alert if list is shared successfully
-            TempData["Message"] = "List shared successfully!";
-            TempData["MessageType"] = "success";
             return RedirectToPage();
         }
+        //public async Task<IActionResult> OnPostShareAsync(int listId)
+        //{
+        //    if (string.IsNullOrWhiteSpace(UserEmail))
+        //    {
+        //        Message = "Enter a valid email address";
+        //        return RedirectToPage();
+        //    }
+
+        // Find user to share with
+        //    var userToShareWith = await _userManager.FindByEmailAsync(UserEmail);
+        //    if (userToShareWith == null)
+        //    {
+        //        //Message for alert if user not found
+        //        TempData["Message"] = "User not found";
+        //        TempData["MessageType"] = "error";
+        //        return RedirectToPage();
+        //    }
+
+        //    //Control if the list is already shared with the user
+        //    bool alreadyShared = await _context.SharedLists
+        //        .AnyAsync(sl => sl.ShoppingListId == listId && sl.SharedWithUserId == userToShareWith.Id);
+
+        //    if (alreadyShared)
+        //    {
+        //        //Message for alert if list is already shared
+        //        TempData["Message"] = "List is already shared with this user";
+        //        TempData["MessageType"] = "error";
+        //        return RedirectToPage();
+        //    }
+
+        //    var sharedList = new SharedList
+        //    {
+        //        SharedWithUserId = userToShareWith.Id,
+        //        ShoppingListId = listId
+        //    };
+
+        //    _context.SharedLists.Add(sharedList);
+        //    await _context.SaveChangesAsync();
+
+        //    //Message for alert if list is shared successfully
+        //    TempData["Message"] = "List shared successfully!";
+        //    TempData["MessageType"] = "success";
+        //    return RedirectToPage();
+        //}
 
 
         public async Task<IActionResult> OnPostDeleteAsync(int listId)
