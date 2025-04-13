@@ -6,8 +6,10 @@
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-@TempData["MessageType"]" role="alert">
+    var messageType = TempData["MessageType"]?.ToString() == "success" ? "success" : "danger";
+    <div class="alert alert-@messageType alert-dismissible fade show" role="alert">
         @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 <!-- H1 changes from your shopping lists to Edit shopping list-->
