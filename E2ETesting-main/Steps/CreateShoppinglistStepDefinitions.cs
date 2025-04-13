@@ -20,7 +20,7 @@ namespace E2ETesting.Steps
             _context = await _browser.NewContextAsync();
             _page = await _context.NewPageAsync();
 
-            // Navigera direkt till den önskade sidan för testet
+            // Navigate to the application URL
             await _page.GotoAsync("http://localhost:5240");
         }
 
@@ -84,7 +84,7 @@ namespace E2ETesting.Steps
 
                 // Wait for and click the Add to list button
                 await _page.WaitForSelectorAsync("text=Add to list");
-                await _page.ClickAsync("text=Add to list"); // Adjust button text if needed
+                await _page.ClickAsync("text=Add to list");
             }
         }
 

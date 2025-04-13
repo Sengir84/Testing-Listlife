@@ -78,15 +78,15 @@ namespace E2ETesting.Steps
         {
             if (expectedResult == "Success")
             {
-                // Check if user was redirected to the home/dashboard page or another page after successful login
+                // Check if user was redirected to my page or another page after successful login
                 await _page.WaitForURLAsync("**/MyPage");
                 var url = _page.Url;
-                Assert.Contains("/MyPage", url);  // You can adjust this based on your successful login URL
+                Assert.Contains("/MyPage", url);  
             }
             else if (expectedResult == "Failure")
             {
                 // Check for error message or remain on the login page
-                string errorMessage = await _page.InnerTextAsync(".text-danger");  // Use .text-danger for general errors
+                string errorMessage = await _page.InnerTextAsync(".text-danger"); 
 
                 // Check for the email validation error message when email is empty
                 if (string.IsNullOrEmpty(_email))
